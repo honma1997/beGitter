@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # Devise
   devise_for :users
+  devise_for :admins, skip: [:registrations]
 
   # ルートページ
   root to: "public/homes#top"
