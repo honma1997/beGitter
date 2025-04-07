@@ -1,0 +1,66 @@
+ja:
+  activerecord:
+    models:
+      user: "ユーザー"
+      post: "投稿"
+      comment: "コメント"
+      tag: "タグ"
+      admin: "管理者"
+      like: "いいね"
+      relationship: "フォロー関係"
+    attributes:
+      user:
+        name: "ユーザー名"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+        phase: "学習フェーズ"
+        current_password: "現在のパスワード"
+      post:
+        title: "タイトル"
+        body: "本文"
+        image: "画像"
+      comment:
+        body: "コメント内容"
+      tag:
+        name: "タグ名"
+      relationship:
+        follower: "フォローする人"
+        followed: "フォローされる人"
+    errors:
+      models:
+        user:
+          attributes:
+            name:
+              blank: "を入力してください"
+            email:
+              blank: "を入力してください"
+              taken: "は既に使用されています"
+              invalid: "の形式が正しくありません"
+            password:
+              blank: "を入力してください"
+              too_short: "は%{count}文字以上で入力してください"
+            password_confirmation:
+              confirmation: "がパスワードと一致しません"
+  errors:
+    messages:
+      blank: "を入力してください"
+      too_short: "は%{count}文字以上で入力してください"
+      confirmation: "が一致しません"
+      not_a_number: "は数値で入力してください"
+      greater_than: "は%{count}より大きい値にしてください"
+      less_than: "は%{count}より小さい値にしてください"
+      taken: "は既に使用されています"
+      invalid: "は不正な値です"
+      record_invalid: "バリデーションに失敗しました: %{errors}"
+  enums:
+    user:
+      phase:
+        basic_learning: "基礎学習"
+        personal_dev: "個人開発"
+        job_hunting: "就職活動"
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M:%S"
+      short: "%m/%d %H:%M"
+      date_only: "%Y/%m/%d"

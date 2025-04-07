@@ -1,0 +1,25 @@
+ja:
+  simple_form:
+    "yes": 'はい'
+    "no": 'いいえ'
+    required:
+      text: '必須'
+      mark: '*'
+    error_notification:
+      default_message: "以下の問題を確認してください："
+    labels:
+      user:
+        name: 'ユーザー名'
+        email: 'メールアドレス'
+        password: 'パスワード'
+        password_confirmation: 'パスワード（確認）'
+        phase: '学習フェーズ'
+        current_password: '現在のパスワード'
+      post:
+        title: 'タイトル'
+        body: '本文'
+        image: '画像'
+      comment:
+        body: 'コメント内容'
+      tag:
+        name: 'タグ名'
