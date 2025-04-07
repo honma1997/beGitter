@@ -17,7 +17,7 @@
             <%= link_to "ユーザー一覧", users_path, class: "nav-link" %>
           </li>
           <li class="nav-item">
-            <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "nav-link" %>
+            <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-link nav-link p-0", form: { data: { turbo: false } }, style: "background: none; border: none;" %>
           </li>
         <% else %>
           <li class="nav-item">
