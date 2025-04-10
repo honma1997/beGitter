@@ -1,2 +1,142 @@
-<h1>Public::Users#mypage</h1>
-<p>Find me in app/views/public/users/mypage.html.erb</p>
+<%# app/views/public/users/mypage.html.erb %>
+<div class="container my-4">
+  <div class="row">
+    <!-- プロフィールカード -->
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body text-center">
+          <!-- プロフィール画像 -->
+          <div class="mb-3">
+            <% if @user.profile_image.attached? %>
+              <%= image_tag @user.profile_image, class: "rounded-circle img-thumbnail", style: "width: 150px; height: 150px; object-fit: cover;" %>
+            <% else %>
+              <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center" style="width: 150px; height: 150px;">
+                <i class="fas fa-user fa-4x text-secondary"></i>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- ユーザー名 -->
+          <h3 class="card-title"><%= @user.name %></h3>
+          
+          <!-- 学習フェーズ -->
+          <p class="badge bg-info text-white mb-3"><%= @user.phase_in_japanese %></p>
+          
+          <!-- 投稿数・フォロー・フォロワー -->
+          <div class="row text-center mb-4">
+            <div class="col-4">
+              <h5><%= @user.posts.count %></h5>
+              <p class="text-muted small">投稿</p>
+            </div>
+            <div class="col-4">
+              <h5><%= @user.followings.count %></h5>
+              <p class="text-muted small">フォロー</p>
+            </div>
+            <div class="col-4">
+              <h5><%= @user.followers.count %></h5>
+              <p class="text-muted small">フォロワー</p>
+            </div>
+          </div>
+          
+          <!-- 登録日 -->
+          <p class="text-muted small">登録日: <%= @user.created_at.strftime('%Y/%m/%d') %></p>
+          
+          <!-- 編集ボタン -->
+          <%= link_to edit_user_path(@user), class: "btn btn-outline-primary btn-block w-100" do %>
+            <i class="fas fa-user-edit"></i> プロフィール編集
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- 投稿管理タブ -->
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="true">
+                <i class="fas fa-list-alt"></i> 自分の投稿
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="likes-tab" data-bs-toggle="tab" data-bs-target="#likes" type="button" role="tab" aria-controls="likes" aria-selected="false">
+                <i class="fas fa-heart"></i> いいねした投稿
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+            <!-- 自分の投稿タブ -->
+            <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+              <div class="d-flex justify-content-between mb-3">
+                <h4>投稿一覧</h4>
+                <%= link_to new_post_path, class: "btn btn-sm btn-primary" do %>
+                  <i class="fas fa-plus"></i> 新規投稿
+                <% end %>
+              </div>
+
+              <% if @posts.present? %>
+                <% @posts.each do |post| %>
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= link_to post.title, post_path(post), class: "text-decoration-none" %></h5>
+                      <p class="card-text text-muted small">
+                        <i class="far fa-calendar"></i> <%= post.created_at.strftime('%Y/%m/%d %H:%M') %>
+                        <span class="ms-2"><i class="far fa-heart"></i> <%= post.likes.count %></span>
+                        <span class="ms-2"><i class="far fa-comment"></i> <%= post.comments.count %></span>
+                      </p>
+                      <div class="d-flex mt-2">
+                        <%= link_to edit_post_path(post), class: "btn btn-sm btn-outline-primary me-2" do %>
+                          <i class="fas fa-edit"></i> 編集
+                        <% end %>
+                        <%= button_to post_path(post), method: :delete, 
+                            class: "btn btn-sm btn-outline-danger", 
+                            data: { confirm: "本当に削除しますか？", turbo: false } do %>
+                          <i class="fas fa-trash"></i> 削除
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+                <!-- ページネーション -->
+                <div class="d-flex justify-content-center mt-4">
+                  <%= paginate @posts %>
+                </div>
+              <% else %>
+                <div class="alert alert-info">
+                  まだ投稿がありません。最初の投稿を作成しましょう！
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- いいねした投稿タブ -->
+            <div class="tab-pane fade" id="likes" role="tabpanel" aria-labelledby="likes-tab">
+              <h4 class="mb-3">いいねした投稿</h4>
+              
+              <% if @user.likes.present? %>
+                <% @user.likes.includes(:post).order(created_at: :desc).each do |like| %>
+                  <% post = like.post %>
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= link_to post.title, post_path(post), class: "text-decoration-none" %></h5>
+                      <p class="card-text text-muted small">
+                        <i class="far fa-user"></i> <%= post.user.name %>
+                        <span class="ms-2"><i class="far fa-calendar"></i> <%= post.created_at.strftime('%Y/%m/%d %H:%M') %></span>
+                      </p>
+                    </div>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="alert alert-info">
+                  まだいいねした投稿はありません。
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

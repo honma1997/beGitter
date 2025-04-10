@@ -1,2 +1,66 @@
-<h1>Public::Posts#index</h1>
-<p>Find me in app/views/public/posts/index.html.erb</p>
+<%# 投稿一覧ページ %>
+<div class="container">
+  <h1>投稿一覧</h1>
+  
+  <%# ログイン済みユーザーのみ新規投稿ボタンを表示 %>
+  <% if user_signed_in? %>
+    <div class="mb-3">
+      <%= link_to "新規投稿", new_post_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+  
+  
+  <%# 投稿一覧表示部分 %>
+  <div class="posts-container">
+    <% if @posts.present? %>
+      <%# 投稿がある場合、カード形式で表示 %>
+      <% @posts.each do |post| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <%# 投稿タイトル（詳細へのリンク） %>
+            <h5 class="card-title"><%= link_to post.title, post_path(post) %></h5>
+            
+            <%# 投稿者情報 %>
+            <h6 class="card-subtitle mb-2 text-muted">
+              <%= post.user.name %> さん
+              <span class="ms-2 badge bg-info text-white"><%= post.user.phase_in_japanese %></span>
+            </h6>
+            
+            <%# 投稿本文（100文字で切り詰め） %>
+            <p class="card-text"><%= truncate(post.body, length: 100) %></p>
+            
+            <%# タグ一覧 %>
+            <div class="post-tags mb-2">
+              <% post.tags.each do |tag| %>
+                <span class="badge bg-secondary"><%= tag.name %></span>
+              <% end %>
+            </div>
+
+            <%# 投稿画像（存在する場合のみ表示） %>
+            <% if post.image.attached? %>
+              <div class="post-image mb-4">
+                <%= image_tag post.image, class: "img-fluid rounded", style: "max-width: 30%;" %>
+              </div>
+            <% end %>
+            
+            <%# 投稿日時 %>
+            <div class="card-text mt-2">
+              <small class="text-muted">投稿日: <%= post.created_at.strftime('%Y/%m/%d %H:%M') %></small>
+              <small class="text-muted">編集日: <%= post.updated_at.strftime('%Y/%m/%d %H:%M') %></small>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <%# ページネーションの表示 %>
+      <div class="pagination-container d-flex justify-content-center">
+        <%= paginate @posts %>
+      </div>
+    <% else %>
+      <%# 投稿がない場合のメッセージ %>
+      <div class="alert alert-info">
+        <p class="mb-0">投稿がありません。最初の投稿をしてみましょう！</p>
+      </div>
+    <% end %>
+  </div>
+</div>

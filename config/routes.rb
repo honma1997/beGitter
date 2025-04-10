@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get 'dashboard/top'
+  end
   # Devise
   devise_for :users
   devise_for :admins, skip: [:registrations]
@@ -24,8 +27,16 @@ Rails.application.routes.draw do
 
   # 管理者用
   namespace :admin do
-    resources :users, only: [:index, :destroy]
-    resources :posts, only: [:index, :destroy]
+    # 管理者のルートページはユーザー一覧
+    root to: "users#index"
+    
+    # ユーザー管理
+    resources :users, only: [:index, :show, :destroy]
+    
+    # 投稿管理
+    resources :posts, only: [:index, :show, :destroy]
+    
+    # タグ管理
     resources :tags
   end
 end

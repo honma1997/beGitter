@@ -1,2 +1,37 @@
-<h1>Admin::Tags#edit</h1>
-<p>Find me in app/views/admin/tags/edit.html.erb</p>
+<div class="admin-tag-edit">
+  <h1 class="mb-4">タグの編集</h1>
+  
+  <div class="card">
+    <div class="card-header">
+      タグ情報
+    </div>
+    <div class="card-body">
+      <%= form_with(model: [:admin, @tag], local: true) do |f| %>
+        <% if @tag.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @tag.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <div class="mb-3">
+          <%= f.label :name, "タグ名", class: "form-label" %>
+          <%= f.text_field :name, class: "form-control" %>
+        </div>
+        
+        <div class="mb-3">
+          <h6>使用状況</h6>
+          <p>このタグは <%= @tag.posts.count %> 件の投稿で使用されています。</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+          <%= f.submit "更新", class: "btn btn-primary" %>
+          <%= link_to "キャンセル", admin_tags_path, class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

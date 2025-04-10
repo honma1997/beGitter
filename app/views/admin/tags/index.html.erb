@@ -1,2 +1,79 @@
-<h1>Admin::Tags#index</h1>
-<p>Find me in app/views/admin/tags/index.html.erb</p>
+<div class="admin-tags">
+  <h1 class="mb-4">タグ管理</h1>
+  
+  <!-- タグ新規作成フォーム -->
+  <div class="card mb-4">
+    <div class="card-header">
+      新規タグ作成
+    </div>
+    <div class="card-body">
+      <%= form_with(model: [:admin, @tag], local: true, class: "row g-3") do |f| %>
+        <% if @tag.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @tag.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <div class="col-md-8">
+          <%= f.text_field :name, class: "form-control", placeholder: "新しいタグ名" %>
+        </div>
+        <div class="col-md-4">
+          <%= f.submit "タグを作成", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- タグ一覧テーブル -->
+  <div class="card">
+    <div class="card-header">
+      タグ一覧
+    </div>
+    <div class="card-body">
+      <% if @tags.present? %>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>タグ名</th>
+                <th>使用投稿数</th>
+                <th>作成日時</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @tags.each do |tag| %>
+                <tr>
+                  <td><%= tag.id %></td>
+                  <td><%= tag.name %></td>
+                  <td><%= tag.posts.count %></td>
+                  <td><%= tag.created_at.strftime('%Y/%m/%d %H:%M') %></td>
+                  <td>
+                    <%= link_to edit_admin_tag_path(tag), class: "btn btn-sm btn-outline-primary" do %>
+                      <i class="fas fa-edit"></i> 編集
+                    <% end %>
+                    <%= link_to admin_tag_path(tag), method: :delete, data: { confirm: "このタグを削除しますか？このタグを使用している投稿からもタグが削除されます。", turbo: false }, class: "btn btn-sm btn-outline-danger" do %>
+                      <i class="fas fa-trash"></i> 削除
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- ページネーション -->
+        <div class="d-flex justify-content-center mt-3">
+          <%= paginate @tags %>
+        </div>
+      <% else %>
+        <p>タグがありません。</p>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,20 +1,74 @@
-<h2>Log in</h2>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+      <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-primary text-white text-center py-3">
+          <h2 class="mb-0 fs-4">ログイン</h2>
+        </div>
+        
+        <div class="card-body p-4">
+          <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), local: true) do |f| %>
+            <% if flash[:alert] %>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= flash[:alert] %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <% end %>
 
-<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: false,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
-    <%= f.input :password,
-                required: false,
-                input_html: { autocomplete: "current-password" } %>
-    <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+            <div class="mb-3">
+              <%= f.label :email, "メールアドレス", class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "登録済みのメールアドレス" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password, "パスワード", class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <%= f.password_field :password, autocomplete: "current-password", class: "form-control", placeholder: "パスワード" %>
+              </div>
+            </div>
+
+            <% if devise_mapping.rememberable? %>
+              <div class="mb-4 form-check">
+                <%= f.check_box :remember_me, class: "form-check-input" %>
+                <%= f.label :remember_me, "ログイン状態を保持する", class: "form-check-label" %>
+              </div>
+            <% end %>
+
+            <div class="d-grid gap-2">
+              <%= f.submit "ログイン", class: "btn btn-primary btn-lg" %>
+            </div>
+          <% end %>
+
+          <div class="mt-4 text-center">
+            <p class="mb-2">アカウントをお持ちでない方は</p>
+            <%= link_to "新規登録する", new_registration_path(resource_name), class: "btn btn-outline-primary mb-3" %>
+            
+            <% if devise_mapping.recoverable? %>
+              <div class="mt-2">
+                <small>
+                  <%= link_to "パスワードをお忘れですか？", new_password_path(resource_name), class: "text-decoration-none" %>
+                </small>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card mt-4 shadow-sm border-0">
+        <div class="card-body p-3">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-info-circle text-primary me-3 fs-4"></i>
+            <div>
+              <h5 class="mb-1 fs-6">beGitterへようこそ</h5>
+              <p class="mb-0 small text-muted">プログラミング学習者のための交流プラットフォームです。学びの旅を共有しましょう。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Log in" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

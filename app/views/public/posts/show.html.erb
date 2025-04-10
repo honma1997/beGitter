@@ -1,2 +1,69 @@
-<h1>Public::Posts#show</h1>
-<p>Find me in app/views/public/posts/show.html.erb</p>
+<%# 投稿詳細ページ %>
+<div class="container">
+  <div class="post-details">
+    <%# 投稿タイトル %>
+    <h1><%= @post.title %></h1>
+    
+    <%# 投稿者情報と投稿日時 %>
+    <div class="post-meta mb-3">
+      <div class="row">
+        <div class="col-md-6">
+          <span class="me-3">投稿者: <%= link_to @post.user.name, user_path(@post.user) %></span>
+          <span class="badge bg-info text-white"><%= @post.user.phase_in_japanese %></span>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <div>
+            <span>投稿日: <%= @post.created_at.strftime('%Y/%m/%d %H:%M') %></span>
+          </div>
+          <%# 更新日時が異なる場合だけ表示する例（任意） %>
+          <% if @post.created_at != @post.updated_at %>
+            <div>
+              <span class="text-muted">編集日: <%= @post.updated_at.strftime('%Y/%m/%d %H:%M') %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+        
+    <%# 投稿者本人の場合のみ編集/削除ボタンを表示 %>
+    <% if @post.user == current_user %>
+      <div class="post-actions mb-3">
+        <%# 編集ボタン %>
+        <%= link_to "編集", edit_post_path(@post), class: "btn btn-sm btn-outline-primary" %>
+        
+        <%# 削除ボタン（確認ダイアログ付き） %>
+        <%= button_to "削除", post_path(@post), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: "本当に削除しますか？" } %>
+      </div>
+    <% end %>
+    
+    <%# 投稿画像（存在する場合のみ表示） %>
+    <% if @post.image.attached? %>
+      <div class="post-image mb-4">
+        <%= image_tag @post.image, class: "img-fluid rounded", style: "max-width: 100%;" %>
+      </div>
+    <% end %>
+    
+    <%# 投稿の本文（改行を反映し、HTMLエスケープ） %>
+    <div class="post-content mb-4">
+      <div class="card">
+        <div class="card-body">
+          <%= simple_format h(@post.body) %>
+        </div>
+      </div>
+    </div>
+
+    <%# 投稿に付けられたタグ %>
+    <div class="post-tags mb-4">
+      <h5>タグ</h5>
+      <% if @post.tags.present? %>
+        <% @post.tags.each do |tag| %>
+          <%= link_to tag_path(tag), class: "badge bg-secondary text-decoration-none me-1" do %>
+            <%= tag.name %> 
+          <% end %>
+        <% end %>
+      <% else %>
+        <p class="text-muted">タグはありません</p>
+      <% end %>
+    </div>
+  </div>
+</div>
