@@ -1,2 +1,98 @@
-<h1>Public::Users#show</h1>
-<p>Find me in app/views/public/users/show.html.erb</p>
+<!-- ユーザー名 -->
+      <h3 class="card-title"><%= @user.name %></h3>
+      
+      <!-- 学習フェーズ -->
+      <p class="badge bg-info text-white mb-3"><%= @user.phase_in_japanese %></p>
+
+      <!-- プロフィール画像 -->
+    <div class="text-center mb-4">
+      <% if @user.profile_image.attached? %>
+        <%= image_tag @user.profile_image, class: "rounded-circle img-thumbnail", style: "width: 150px; height: 150px; object-fit: cover;" %>
+      <% else %>
+        <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center mx-auto" style="width: 150px; height: 150px;">
+          <i class="fas fa-user fa-4x text-secondary"></i>
+        </div>
+      <% end %>
+    </div>
+      <!-- 投稿数・フォロー・フォロワー -->
+      <div class="row text-center mb-4">
+        <div class="col-4">
+          <h5><%= @user.posts.count %></h5>
+          <p class="text-muted small">投稿</p>
+        </div>
+        <div class="col-4">
+          <h5><%= @user.followings.count %></h5>
+          <p class="text-muted small">フォロー</p>
+        </div>
+        <div class="col-4">
+          <h5><%= @user.followers.count %></h5>
+          <p class="text-muted small">フォロワー</p>
+        </div>
+      </div>
+      
+      <!-- 登録日 -->
+      <p class="text-muted small">登録日: <%= @user.created_at.strftime('%Y/%m/%d') %></p>
+      
+      <!-- フォローボタン（自分以外のユーザーの場合のみ表示） -->
+      <% if user_signed_in? && current_user != @user %>
+        <% if current_user.following?(@user) %>
+          <%= button_to user_relationship_path(@user), method: :delete, class: "btn btn-outline-secondary w-100 mb-2" do %>
+            <i class="fas fa-user-minus"></i> フォロー解除
+          <% end %>
+        <% else %>
+          <%= button_to user_relationship_path(@user), method: :post, class: "btn btn-primary w-100 mb-2" do %>
+            <i class="fas fa-user-plus"></i> フォローする
+          <% end %>
+        <% end %>
+      <% end %>
+      
+      <!-- ユーザー一覧に戻るボタン -->
+      <%= link_to users_path, class: "btn btn-outline-secondary w-100" do %>
+        <i class="fas fa-arrow-left"></i> ユーザー一覧に戻る
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- ユーザーの投稿一覧 -->
+<div class="col-md-8">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+      <h4 class="mb-0"><%= @user.name %> さんの投稿</h4>
+    </div>
+    <div class="card-body">
+      <% if @posts.present? %>
+        <% @posts.each do |post| %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><%= link_to post.title, post_path(post), class: "text-decoration-none" %></h5>
+              <p class="card-text text-muted small">
+                <i class="far fa-calendar"></i> <%= post.created_at.strftime('%Y/%m/%d %H:%M') %>
+                <span class="ms-2"><i class="far fa-heart"></i> <%= post.likes.count %></span>
+                <span class="ms-2"><i class="far fa-comment"></i> <%= post.comments.count %></span>
+              </p>
+              <p class="card-text"><%= truncate(post.body, length: 100) %></p>
+              
+              <!-- 投稿に付けられたタグ -->
+              <div class="post-tags mb-2">
+                <% post.tags.each do |tag| %>
+                  <span class="badge bg-secondary"><%= tag.name %></span>
+                <% end %>
+              </div>
+              
+              <%= link_to "詳細を見る", post_path(post), class: "btn btn-sm btn-outline-primary" %>
+            </div>
+          </div>
+        <% end %>
+        <!-- ページネーション -->
+        <div class="d-flex justify-content-center mt-4">
+          <%= paginate @posts %>
+        </div>
+      <% else %>
+        <div class="alert alert-info">
+          投稿がありません。
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

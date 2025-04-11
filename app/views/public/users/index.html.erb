@@ -1,2 +1,61 @@
-<h1>Public::Users#index</h1>
-<p>Find me in app/views/public/users/index.html.erb</p>
+<%# ユーザー一覧ページ %>
+<div class="container my-4">
+  <h1 class="mb-4">ユーザー一覧</h1>
+  
+  <%# ユーザー一覧表示部分 %>
+  <% if @users.present? %>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+      <% @users.each do |user| %>
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+              <%# プロフィール画像 %>
+              <div class="mb-3">
+                <% if user.profile_image.attached? %>
+                  <%= image_tag user.profile_image, class: "rounded-circle img-thumbnail", style: "width: 100px; height: 100px; object-fit: cover;" %>
+                <% else %>
+                  <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center" style: "width: 100px; height: 100px;">
+                    <i class="fas fa-user fa-3x text-secondary"></i>
+                  </div>
+                <% end %>
+              </div>
+              
+              <%# ユーザー名 %>
+              <h5 class="card-title"><%= user.name %></h5>
+              
+              <%# 学習フェーズ %>
+              <p class="badge bg-info text-white mb-3"><%= user.phase_in_japanese %></p>
+              
+              <%# 投稿数・フォロワー数 %>
+              <div class="d-flex justify-content-center gap-3 mb-3">
+                <div class="text-center">
+                  <div class="fw-bold"><%= user.posts.count %></div>
+                  <small class="text-muted">投稿</small>
+                </div>
+                <div class="text-center">
+                  <div class="fw-bold"><%= user.followers.count %></div>
+                  <small class="text-muted">フォロワー</small>
+                </div>
+              </div>
+              
+              <%# プロフィール詳細へのリンク %>
+              <%= link_to "プロフィールを見る", user_path(user), class: "btn btn-outline-primary btn-sm w-100" %>
+            </div>
+            <div class="card-footer bg-white border-0">
+              <small class="text-muted">登録日: <%= user.created_at.strftime('%Y/%m/%d') %></small>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <%# ページネーション %>
+    <div class="d-flex justify-content-center mt-4">
+      <%= paginate @users %>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      ユーザーが見つかりませんでした。
+    </div>
+  <% end %>
+</div>

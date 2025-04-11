@@ -1,2 +1,137 @@
-<h1>Public::Homes#top</h1>
-<p>Find me in app/views/public/homes/top.html.erb</p>
+<%# app/views/public/homes/top.html.erb %>
+<div class="container py-5">
+  <div class="row mb-5">
+    <div class="col-md-8 mx-auto text-center">
+      <h1 class="display-4 mb-3">beGitter</h1>
+      <h2 class="h4 text-muted mb-4">プログラミング初心者のためのSNS</h2>
+      <p class="lead">
+        プログラミング学習の道のりを共有し、互いに励まし合えるコミュニティです。<br>
+        あなたの学びの進捗を記録して、同じ道を歩む仲間と繋がりましょう。
+      </p>
+      
+      <% if user_signed_in? %>
+        <%= link_to posts_path, class: "btn btn-primary btn-lg mt-3" do %>
+          <i class="fas fa-list-alt me-2"></i> 投稿一覧を見る
+        <% end %>
+      <% else %>
+        <div class="mt-4">
+          <%= link_to new_user_registration_path, class: "btn btn-outline-primary btn-lg me-3" do %>
+            <i class="fas fa-user-plus me-2"></i> 新規登録
+          <% end %>
+          
+          <%= link_to new_user_session_path, class: "btn btn-outline-primary btn-lg" do %>
+            <i class="fas fa-sign-in-alt me-2"></i> ログイン
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header bg-white">
+          <h3 class="h5 mb-0"><i class="fas fa-star me-2 text-warning"></i>最新の投稿</h3>
+        </div>
+        <div class="card-body">
+          <% if @posts.present? %>
+            <div class="list-group list-group-flush">
+              <% @posts.each do |post| %>
+                <%= link_to post_path(post), class: "list-group-item list-group-item-action" do %>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-1 text-truncate"><%= post.title %></h5>
+                    <small class="text-muted"><%= time_ago_in_words(post.created_at) %>前</small>
+                  </div>
+                  <p class="mb-1 text-muted small"><%= post.user.name %> さん</p>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="text-center mt-3">
+              <%= link_to posts_path, class: "btn btn-sm btn-outline-primary" do %>
+                <i class="fas fa-angle-right me-1"></i> もっと見る
+              <% end %>
+            </div>
+          <% else %>
+            <p class="mb-0 text-center text-muted">投稿がありません</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6 mt-4 mt-md-0">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header bg-white">
+          <h3 class="h5 mb-0"><i class="fas fa-users me-2 text-info"></i>新しいユーザー</h3>
+        </div>
+        <div class="card-body">
+          <% if @users.present? %>
+            <div class="list-group list-group-flush">
+              <% @users.each do |user| %>
+                <%= link_to user_path(user), class: "list-group-item list-group-item-action" do %>
+                  <div class="d-flex align-items-center">
+                    <div class="me-3">
+                      <% if user.profile_image.attached? %>
+                        <%= image_tag user.profile_image, class: "rounded-circle", style: "width: 40px; height: 40px; object-fit: cover;" %>
+                      <% else %>
+                        <div class="bg-light rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
+                          <i class="fas fa-user text-secondary"></i>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div>
+                      <h6 class="mb-0"><%= user.name %></h6>
+                      <span class="badge bg-info text-white"><%= user.phase_in_japanese %></span>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="text-center mt-3">
+              <%= link_to users_path, class: "btn btn-sm btn-outline-primary" do %>
+                <i class="fas fa-angle-right me-1"></i> もっと見る
+              <% end %>
+            </div>
+          <% else %>
+            <p class="mb-0 text-center text-muted">ユーザーがいません</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-10 mx-auto">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h3 class="h4 mb-4 text-center">beGitterの特徴</h3>
+          
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="text-center mb-3">
+                <i class="fas fa-book fa-3x text-primary"></i>
+              </div>
+              <h4 class="h5 text-center">学びを記録</h4>
+              <p class="text-muted">日々の学習内容や成果を投稿して、自分の成長を可視化できます。</p>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="text-center mb-3">
+                <i class="fas fa-users fa-3x text-success"></i>
+              </div>
+              <h4 class="h5 text-center">仲間と繋がる</h4>
+              <p class="text-muted">同じフェーズの学習者をフォローして、モチベーションを高め合いましょう。</p>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="text-center mb-3">
+                <i class="fas fa-lightbulb fa-3x text-warning"></i>
+              </div>
+              <h4 class="h5 text-center">知識を共有</h4>
+              <p class="text-muted">プログラミングの知識やつまずいたポイントを共有して、互いに助け合いましょう。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
