@@ -1,0 +1,62 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+      <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-dark text-white text-center py-3">
+          <h2 class="mb-0 fs-4">管理者ログイン</h2>
+        </div>
+        
+        <div class="card-body p-4">
+          <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), local: true) do |f| %>
+            <div class="mb-3">
+              <%= f.label :email, "メールアドレス", class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "管理者メールアドレス" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password, "パスワード", class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <%= f.password_field :password, autocomplete: "current-password", class: "form-control", placeholder: "パスワード" %>
+              </div>
+            </div>
+
+            <% if devise_mapping.rememberable? %>
+              <div class="mb-4 form-check">
+                <%= f.check_box :remember_me, class: "form-check-input" %>
+                <%= f.label :remember_me, "ログイン状態を保持する", class: "form-check-label" %>
+              </div>
+            <% end %>
+
+            <div class="d-grid gap-2">
+              <%= f.submit "ログイン", class: "btn btn-primary btn-lg" %>
+            </div>
+          <% end %>
+
+          <% if devise_mapping.recoverable? %>
+            <div class="mt-4 text-center">
+              <small>
+                <%= link_to "パスワードをお忘れですか？", new_password_path(resource_name), class: "text-decoration-none" %>
+              </small>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="card mt-4 shadow-sm border-0">
+        <div class="card-body p-3">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-info-circle text-primary me-3 fs-4"></i>
+            <div>
+              <h5 class="mb-1 fs-6">beGitter 管理者ページ</h5>
+              <p class="mb-0 small text-muted">管理者専用のログインページです。一般ユーザーはアクセスできません。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

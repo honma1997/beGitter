@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   end
   # Devise
   devise_for :users
-  devise_for :admins, skip: [:registrations]
+  devise_for :admins, skip: [:registrations], controllers: {
+  sessions: 'admins/sessions'
+}
 
   # ルートページ
   root to: "public/homes#top"
