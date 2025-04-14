@@ -92,6 +92,10 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    dotenv (3.1.8)
+    dotenv-rails (3.1.8)
+      dotenv (= 3.1.8)
+      railties (>= 6.1)
     enum_help (0.0.19)
       activesupport (>= 3.0.0)
     erubi (1.13.1)
@@ -159,8 +163,7 @@ GEM
     orm_adapter (0.5.0)
     popper_js (2.11.8)
     public_suffix (6.0.1)
-    puma (5.6.9)
-      nio4r (~> 2.0)
+    puma (3.12.6)
     racc (1.8.1)
     rack (2.2.13)
     rack-mini-profiler (2.3.4)
@@ -286,13 +289,17 @@ DEPENDENCIES
   byebug
   capybara (>= 3.26)
   devise
+  dotenv-rails
   enum_help
   font-awesome-sass (~> 6.7)
   jbuilder (~> 2.7)
   kaminari (~> 1.2)
   listen (~> 3.3)
   mysql2
-  puma (~> 5.0)
+  net-imap
+  net-pop
+  net-smtp
+  puma (~> 3.11)
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.7, >= 6.1.7.10)
   ransack (~> 4.3)
