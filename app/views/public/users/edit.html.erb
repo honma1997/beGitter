@@ -58,4 +58,21 @@
       </div>
     </div>
   </div>
+  
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-danger text-white">
+          <h4 class="mb-0">アカウント削除</h4>
+        </div>
+        <div class="card-body">
+          <p class="text-danger">アカウントを削除すると、すべての投稿やコメント、いいねなどのデータが完全に削除されます。この操作は取り消せません。</p>
+          <p>退会する場合は以下のボタンを押してください。</p>
+          <%= button_to "退会する", user_path(@user), method: :delete, 
+                data: { confirm: "本当に退会しますか？すべてのデータが削除され、この操作は取り消せません。" }, 
+                class: "btn btn-danger" %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

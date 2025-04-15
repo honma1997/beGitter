@@ -33,6 +33,20 @@ class Public::UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user = current_user
+    
+    # ユーザーデータの削除前にログアウト処理
+    sign_out(@user)
+    
+    # ユーザーデータの削除
+    if @user.destroy
+      redirect_to root_path, notice: "退会処理が完了しました。ご利用ありがとうございました。"
+    else
+      redirect_to edit_user_path(@user), alert: "退会処理に失敗しました。お手数ですが、管理者にお問い合わせください。"
+    end
+  end
+
   # ユーザー検索
   def search
     @users = User.where("name LIKE ?", "%#{params[:keyword]}%").page(params[:page]).per(12)
