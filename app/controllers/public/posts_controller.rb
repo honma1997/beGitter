@@ -71,15 +71,32 @@ class Public::PostsController < ApplicationController
   # 投稿検索処理
   def search
     @keyword = params[:keyword]
-    @selected_tag_ids = params[:tag_ids] || []
-    @tags = Tag.all # 検索フォーム用にすべてのタグを取得
+    @tags = Tag.all # 検索フォーム用
     
-    @posts = Post.includes(:user, :tags)
-                .search(@keyword, @selected_tag_ids)
-                .order(created_at: :desc)
-                .page(params[:page])
-                .per(10)
-                
+    begin
+      # tag_ids パラメータの処理
+      tag_param = params[:tag_ids]
+      @selected_tag_ids = case tag_param
+                          when Array
+                            tag_param.compact.reject(&:blank?)
+                          when String
+                            [tag_param].reject(&:blank?)
+                          else
+                            []
+                          end
+      
+      @posts = Post.includes(:user, :tags)
+                  .search(@keyword, @selected_tag_ids)
+                  .order(created_at: :desc)
+                  .page(params[:page])
+                  .per(10)
+    rescue => e
+      Rails.logger.error "検索エラー: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      @posts = Post.none
+      flash.now[:alert] = "検索処理中にエラーが発生しました。管理者にお問い合わせください。"
+    end
+    
     render :index
   end
   
