@@ -9,6 +9,14 @@
     </button>
     
     <div class="collapse navbar-collapse" id="navbarNav">
+      <%# ヘッダー検索フォーム - デスクトップのみ表示 %>
+      <div class="navbar-search d-none d-lg-block me-auto">
+        <%= form_with url: search_posts_path, method: :get, local: true, class: "d-flex" do |f| %>
+          <%= f.text_field :keyword, class: "form-control form-control-sm me-2", placeholder: "投稿を検索", style: "width: 200px;" %>
+          <%= f.submit "検索", class: "btn btn-sm btn-outline-primary" %>
+        <% end %>
+      </div>
+      
       <ul class="navbar-nav ms-auto">
         <% if user_signed_in? %>
           <li class="nav-item">

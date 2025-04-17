@@ -1,7 +1,15 @@
+# app/controllers/admin/posts_controller.rb
 class Admin::PostsController < Admin::ApplicationController
   # 投稿一覧
   def index
-    @posts = Post.includes(:user, :tags).order(created_at: :desc).page(params[:page]).per(20)
+    @keyword = params[:keyword]
+    @posts = if @keyword.present?
+              Post.includes(:user, :tags).where('title LIKE ? OR body LIKE ?', "%#{@keyword}%", "%#{@keyword}%")
+            else
+              Post.includes(:user, :tags)
+            end
+    
+    @posts = @posts.order(created_at: :desc).page(params[:page]).per(20)
   end
 
   # 投稿詳細

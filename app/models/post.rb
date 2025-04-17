@@ -12,4 +12,21 @@ class Post < ApplicationRecord
   # バリデーション
   validates :title, presence: true
   validates :body, presence: true
+  
+  # 検索メソッド
+  def self.search(keyword, tag_ids = nil)
+    posts = all
+    
+    # キーワード検索
+    if keyword.present?
+      posts = posts.where('title LIKE ? OR body LIKE ?', "%#{keyword}%", "%#{keyword}%")
+    end
+    
+    # タグ検索
+    if tag_ids.present? && tag_ids.reject(&:blank?).present?
+      posts = posts.joins(:post_tags).where(post_tags: { tag_id: tag_ids }).distinct
+    end
+    
+    posts
+  end
 end

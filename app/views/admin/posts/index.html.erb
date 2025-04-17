@@ -1,2 +1,91 @@
-<h1>Admin::Posts#index</h1>
-<p>Find me in app/views/admin/posts/index.html.erb</p>
+<%# app/views/admin/posts/index.html.erb %>
+<div class="admin-posts">
+  <h1 class="mb-4">投稿管理</h1>
+  
+  <%# 検索フォーム %>
+  <div class="card mb-4">
+    <div class="card-header">
+      投稿検索
+    </div>
+    <div class="card-body">
+      <%= form_with url: admin_posts_path, method: :get, local: true, class: "row g-3" do |f| %>
+        <div class="col-md-8">
+          <%= f.text_field :keyword, value: @keyword, class: "form-control", placeholder: "タイトルや本文で検索" %>
+        </div>
+        <div class="col-md-4">
+          <%= f.submit "検索", class: "btn btn-primary" %>
+          <% if @keyword.present? %>
+            <%= link_to "クリア", admin_posts_path, class: "btn btn-outline-secondary ms-2" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <%# 検索結果表示 %>
+  <% if @keyword.present? %>
+    <div class="alert alert-info">
+      検索ワード "<%= @keyword %>" の結果: <%= @posts.total_count %>件
+    </div>
+  <% end %>
+  
+  <%# 投稿一覧テーブル %>
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>投稿一覧</span>
+      <span class="badge bg-primary"><%= @posts.total_count %>件</span>
+    </div>
+    <div class="card-body">
+      <% if @posts.present? %>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>タイトル</th>
+                <th>投稿者</th>
+                <th>タグ</th>
+                <th>投稿日時</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @posts.each do |post| %>
+                <tr>
+                  <td><%= post.id %></td>
+                  <td>
+                    <%= link_to truncate(post.title, length: 30), admin_post_path(post) %>
+                  </td>
+                  <td>
+                    <%= link_to post.user.name, admin_user_path(post.user) %>
+                  </td>
+                  <td>
+                    <% post.tags.each do |tag| %>
+                      <span class="badge bg-secondary"><%= tag.name %></span>
+                    <% end %>
+                  </td>
+                  <td><%= post.created_at.strftime('%Y/%m/%d %H:%M') %></td>
+                  <td>
+                    <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary" do %>
+                      <i class="fas fa-eye"></i> 詳細
+                    <% end %>
+                    <%= link_to admin_post_path(post), method: :delete, data: { confirm: "この投稿を削除しますか？", turbo: false }, class: "btn btn-sm btn-outline-danger" do %>
+                      <i class="fas fa-trash"></i> 削除
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        
+        <%# ページネーション %>
+        <div class="d-flex justify-content-center mt-3">
+          <%= paginate @posts %>
+        </div>
+      <% else %>
+        <p>投稿がありません。</p>
+      <% end %>
+    </div>
+  </div>
+</div>
