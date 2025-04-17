@@ -1,11 +1,12 @@
 class Public::PostsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :search]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :ensure_correct_user, only: [:edit, :update, :destroy]
   
   # 投稿一覧
   def index
     @posts = Post.includes(:user, :tags).order(created_at: :desc).page(params[:page]).per(10)
+    @tags = Tag.all # 検索フォーム用
   end
 
   # 投稿詳細
@@ -67,6 +68,20 @@ class Public::PostsController < ApplicationController
     end
   end
 
+  # 投稿検索処理
+  def search
+    @keyword = params[:keyword]
+    @selected_tag_ids = params[:tag_ids] || []
+    @tags = Tag.all # 検索フォーム用にすべてのタグを取得
+    
+    @posts = Post.includes(:user, :tags)
+                .search(@keyword, @selected_tag_ids)
+                .order(created_at: :desc)
+                .page(params[:page])
+                .per(10)
+                
+    render :index
+  end
   
   private
   
