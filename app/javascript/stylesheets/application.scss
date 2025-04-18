@@ -1,0 +1,124 @@
+.markdown-content {
+  line-height: 1.6;
+  word-wrap: break-word;
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
+  h5 { font-size: 1.1rem; }
+  h6 { font-size: 1rem; }
+  
+  p {
+    margin-bottom: 1rem;
+  }
+  
+  pre {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 0;
+    margin-bottom: 1rem;
+    overflow: auto;
+  }
+  
+  code {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875em;
+    color: #e83e8c;
+    word-wrap: break-word;
+  }
+  
+  pre code {
+    color: inherit;
+    display: block;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  
+  blockquote {
+    border-left: 4px solid #ced4da;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #6c757d;
+  }
+  
+  table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+    
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #dee2e6;
+    }
+    
+    th {
+      background-color: #f8f9fa;
+    }
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
+  }
+  
+  /* CodeRay スタイル */
+  .CodeRay {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    
+    .line-numbers {
+      background-color: #e9ecef;
+      padding: 0 0.5rem;
+      text-align: right;
+      color: #6c757d;
+      user-select: none;
+    }
+    
+    .code {
+      padding: 0.5rem;
+    }
+  }
+}
+
+/* シンタックスハイライト用カラーテーマ */
+.CodeRay {
+  .keyword { color: #0033CC; font-weight: bold; }
+  .comment { color: #888888; }
+  .string { color: #CC3300; }
+  .symbol { color: #FF8000; }
+  .number { color: #0066FF; }
+  .class { color: #008080; font-weight: bold; }
+  .function { color: #CC00FF; }
+  .constant { color: #003399; }
+  .method { color: #CC00FF; }
+  .variable { color: #336699; }
+}
+
+.post-image-display {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  margin: 0 auto;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  padding: 5px;
+}
+
+/* サムネイル用 */
+.post-thumbnail {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border: 1px solid #dee2e6;
+}

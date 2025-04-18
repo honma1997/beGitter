@@ -63,9 +63,13 @@ gem 'ransack', '~> 4.3'
 gem 'simple_form', '~> 5.3'
 gem 'enum_help'
 gem 'dotenv-rails'
+
 group :production do
   gem 'mysql2'
 end
 gem "net-smtp"
 gem "net-pop"
 gem "net-imap"
+
+gem 'redcarpet'
+gem 'coderay'

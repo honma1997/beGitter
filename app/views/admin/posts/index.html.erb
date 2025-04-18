@@ -1,91 +1,182 @@
-<%# app/views/admin/posts/index.html.erb %>
 <div class="admin-posts">
-  <h1 class="mb-4">投稿管理</h1>
-  
-  <%# 検索フォーム %>
-  <div class="card mb-4">
-    <div class="card-header">
-      投稿検索
-    </div>
-    <div class="card-body">
-      <%= form_with url: admin_posts_path, method: :get, local: true, class: "row g-3" do |f| %>
-        <div class="col-md-8">
-          <%= f.text_field :keyword, value: @keyword, class: "form-control", placeholder: "タイトルや本文で検索" %>
-        </div>
-        <div class="col-md-4">
-          <%= f.submit "検索", class: "btn btn-primary" %>
-          <% if @keyword.present? %>
-            <%= link_to "クリア", admin_posts_path, class: "btn btn-outline-secondary ms-2" %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-  </div>
-  
-  <%# 検索結果表示 %>
-  <% if @keyword.present? %>
-    <div class="alert alert-info">
-      検索ワード "<%= @keyword %>" の結果: <%= @posts.total_count %>件
-    </div>
-  <% end %>
-  
-  <%# 投稿一覧テーブル %>
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <span>投稿一覧</span>
-      <span class="badge bg-primary"><%= @posts.total_count %>件</span>
-    </div>
-    <div class="card-body">
-      <% if @posts.present? %>
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>タイトル</th>
-                <th>投稿者</th>
-                <th>タグ</th>
-                <th>投稿日時</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @posts.each do |post| %>
-                <tr>
-                  <td><%= post.id %></td>
-                  <td>
-                    <%= link_to truncate(post.title, length: 30), admin_post_path(post) %>
-                  </td>
-                  <td>
-                    <%= link_to post.user.name, admin_user_path(post.user) %>
-                  </td>
-                  <td>
-                    <% post.tags.each do |tag| %>
+  <div class="row">
+    <!-- メインコンテンツ：投稿一覧 (9列分を使用) -->
+    <div class="col-md-9 order-md-2">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">投稿管理</h1>
+        <span class="badge bg-primary fs-6"><%= @posts.total_count %>件</span>
+      </div>
+      
+      <%# 検索結果情報の表示 %>
+      <% if @keyword.present? || @selected_tag_ids.present? || @selected_user_id.present? || @start_date.present? || @end_date.present? %>
+        <div class="search-result-info alert alert-info mb-3">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="mb-2">検索条件</h5>
+              <ul class="mb-1 ps-3">
+                <% if @keyword.present? %>
+                  <li>キーワード: <%= @keyword %></li>
+                <% end %>
+                
+                <% if @selected_tag_ids.present? %>
+                  <% selected_tags = Tag.where(id: @selected_tag_ids) %>
+                  <li>タグ: 
+                    <% selected_tags.each do |tag| %>
                       <span class="badge bg-secondary"><%= tag.name %></span>
                     <% end %>
-                  </td>
-                  <td><%= post.created_at.strftime('%Y/%m/%d %H:%M') %></td>
-                  <td>
-                    <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary" do %>
-                      <i class="fas fa-eye"></i> 詳細
-                    <% end %>
-                    <%= link_to admin_post_path(post), method: :delete, data: { confirm: "この投稿を削除しますか？", turbo: false }, class: "btn btn-sm btn-outline-danger" do %>
-                      <i class="fas fa-trash"></i> 削除
-                    <% end %>
-                  </td>
-                </tr>
+                  </li>
+                <% end %>
+                
+                <% if @selected_user_id.present? %>
+                  <li>投稿者: <%= User.find_by(id: @selected_user_id)&.name || '不明なユーザー' %></li>
+                <% end %>
+                
+                <% if @start_date.present? || @end_date.present? %>
+                  <li>期間: 
+                    <%= @start_date&.strftime('%Y/%m/%d') || '指定なし' %> 〜 
+                    <%= @end_date&.strftime('%Y/%m/%d') || '指定なし' %>
+                  </li>
+                <% end %>
+              </ul>
+              <p class="mt-2 mb-0">検索結果: <%= @posts.total_count %>件</p>
+            </div>
+            
+            <div>
+              <%= link_to admin_posts_path, class: "btn btn-sm btn-outline-secondary" do %>
+                <i class="fas fa-undo"></i> リセット
               <% end %>
-            </tbody>
-          </table>
+            </div>
+          </div>
         </div>
-        
-        <%# ページネーション %>
-        <div class="d-flex justify-content-center mt-3">
-          <%= paginate @posts %>
-        </div>
-      <% else %>
-        <p>投稿がありません。</p>
       <% end %>
+      
+      <%# 投稿一覧テーブル %>
+      <div class="card">
+        <div class="card-body p-0">
+          <% if @posts.present? %>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID</th>
+                    <th>タイトル</th>
+                    <th>投稿者</th>
+                    <th>タグ</th>
+                    <th>投稿日時</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @posts.each do |post| %>
+                    <tr>
+                      <td><%= post.id %></td>
+                      <td>
+                        <%= link_to truncate(post.title, length: 30), admin_post_path(post) %>
+                      </td>
+                      <td>
+                        <%= link_to post.user.name, admin_user_path(post.user) %>
+                      </td>
+                      <td>
+                        <% post.tags.each do |tag| %>
+                          <span class="badge bg-secondary"><%= tag.name %></span>
+                        <% end %>
+                      </td>
+                      <td><%= post.created_at.strftime('%Y/%m/%d %H:%M') %></td>
+                      <td>
+                        <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary" do %>
+                          <i class="fas fa-eye"></i> 詳細
+                        <% end %>
+                        <%= link_to admin_post_path(post), method: :delete, data: { confirm: "この投稿を削除しますか？", turbo: false }, class: "btn btn-sm btn-outline-danger" do %>
+                          <i class="fas fa-trash"></i> 削除
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            
+            <%# ページネーション %>
+            <div class="d-flex justify-content-center py-3">
+              <%= paginate @posts, params: {
+                keyword: @keyword,
+                tag_ids: @selected_tag_ids,
+                user_id: @selected_user_id,
+                start_date: @start_date,
+                end_date: @end_date
+              } %>
+            </div>
+          <% else %>
+            <div class="p-4 text-center">
+              <p class="mb-0">投稿がありません。</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- サイドバー：検索機能 (3列分を使用) -->
+    <div class="col-md-3 order-md-1">
+      <div class="card sticky-top" style="top: 20px; z-index: 1;">
+        <div class="card-header bg-light">
+          <h5 class="mb-0"><i class="fas fa-search me-2"></i>検索</h5>
+        </div>
+        <div class="card-body">
+          <%= form_with url: admin_posts_path, method: :get, local: true do |f| %>
+            <!-- キーワード検索 -->
+            <div class="mb-3">
+              <label class="form-label">キーワード</label>
+              <%= f.text_field :keyword, value: @keyword, class: "form-control form-control-sm", placeholder: "タイトル・本文" %>
+            </div>
+            
+            <!-- タグ検索 -->
+            <div class="mb-3">
+              <label class="form-label">タグ</label>
+              <% if @tags.present? %>
+                <%= f.select :tag_ids, 
+                            @tags.map{ |tag| [tag.name, tag.id] }, 
+                            { include_blank: "選択してください", selected: @selected_tag_ids },
+                            { class: "form-select form-select-sm" } %>
+              <% end %>
+            </div>
+            
+            <!-- ユーザー検索 -->
+            <div class="mb-3">
+              <label class="form-label">投稿者</label>
+              <%= f.select :user_id, 
+                          @users.map{ |user| [user.name, user.id] }, 
+                          { include_blank: "選択してください", selected: @selected_user_id },
+                          { class: "form-select form-select-sm" } %>
+            </div>
+            
+            <!-- 期間検索 -->
+            <div class="mb-3">
+              <label class="form-label">期間</label>
+              <div class="input-group input-group-sm mb-2">
+                <%= f.date_field :start_date, value: @start_date, class: "form-control form-control-sm" %>
+                <span class="input-group-text">〜</span>
+                <%= f.date_field :end_date, value: @end_date, class: "form-control form-control-sm" %>
+              </div>
+            </div>
+            
+            <!-- クイック期間 -->
+            <div class="mb-3">
+              <label class="form-label">クイック期間</label>
+              <div class="d-flex flex-wrap gap-1">
+                <%= link_to "今日", admin_posts_path(keyword: @keyword, tag_ids: @selected_tag_ids, user_id: @selected_user_id, start_date: Date.today, end_date: Date.today), class: "btn btn-outline-secondary btn-sm" %>
+                <%= link_to "今週", admin_posts_path(keyword: @keyword, tag_ids: @selected_tag_ids, user_id: @selected_user_id, start_date: Date.today.beginning_of_week, end_date: Date.today), class: "btn btn-outline-secondary btn-sm" %>
+                <%= link_to "今月", admin_posts_path(keyword: @keyword, tag_ids: @selected_tag_ids, user_id: @selected_user_id, start_date: Date.today.beginning_of_month, end_date: Date.today), class: "btn btn-outline-secondary btn-sm" %>
+              </div>
+            </div>
+            
+            <!-- 検索ボタン -->
+            <div class="d-grid gap-2">
+              <%= f.submit "検索", class: "btn btn-primary btn-sm" %>
+              <%= link_to "リセット", admin_posts_path, class: "btn btn-outline-secondary btn-sm" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

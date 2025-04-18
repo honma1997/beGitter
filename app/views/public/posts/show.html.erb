@@ -15,7 +15,7 @@
           <div>
             <span>投稿日: <%= @post.created_at.strftime('%Y/%m/%d %H:%M') %></span>
           </div>
-          <%# 更新日時が異なる場合だけ表示する例（任意） %>
+          <%# 更新日時が異なる場合だけ表示する %>
           <% if @post.created_at != @post.updated_at %>
             <div>
               <span class="text-muted">編集日: <%= @post.updated_at.strftime('%Y/%m/%d %H:%M') %></span>
@@ -29,7 +29,7 @@
     <% if @post.user == current_user %>
       <div class="post-actions mb-3">
         <%# 編集ボタン %>
-        <%= link_to "編集", edit_post_path(@post), class: "btn btn-sm btn-outline-primary" %>
+        <%= link_to "編集", edit_post_path(@post), class: "btn btn-sm btn-outline-primary me-2" %>
         
         <%# 削除ボタン（確認ダイアログ付き） %>
         <%= button_to "削除", post_path(@post), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: "本当に削除しますか？" } %>
@@ -38,32 +38,32 @@
     
     <%# 投稿画像（存在する場合のみ表示） %>
     <% if @post.image.attached? %>
-      <div class="post-image mb-4">
-        <%= image_tag @post.image, class: "img-fluid rounded", style: "max-width: 100%;" %>
+      <div class="post-image mb-4 text-center">
+        <%= image_tag @post.image, class: "img-fluid rounded post-image-display", style: "max-width: 600px; max-height: 400px; object-fit: contain;" %>
       </div>
     <% end %>
-    
-    <%# 投稿の本文（改行を反映し、HTMLエスケープ） %>
+
+    <%# 投稿の本文（マークダウン対応） %>
     <div class="post-content mb-4">
       <div class="card">
-        <div class="card-body">
-          <%= simple_format h(@post.body) %>
+        <div class="card-body markdown-content">
+          <%= markdown(@post.body) %>
         </div>
       </div>
     </div>
 
-    <%# 投稿に付けられたタグ - このブロックのみ残す %>
+    <%# 投稿に付けられたタグ %>
     <div class="post-tags mb-4">
       <h5>タグ</h5>
-      <% if @post.tags.present? %>
-        <% @post.tags.each do |tag| %>
-          <%= link_to tag_path(tag), class: "badge bg-secondary text-decoration-none me-1" do %>
-            <%= tag.name %> 
+      <div class="d-flex flex-wrap gap-1">
+        <% if @post.tags.present? %>
+          <% @post.tags.each do |tag| %>
+            <%= link_to tag.name, tag_path(tag), class: "badge bg-secondary text-decoration-none" %>
           <% end %>
+        <% else %>
+          <p class="text-muted">タグはありません</p>
         <% end %>
-      <% else %>
-        <p class="text-muted">タグはありません</p>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>

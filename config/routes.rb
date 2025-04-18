@@ -37,7 +37,6 @@ Rails.application.routes.draw do
     
     # ユーザー管理
     resources :users, only: [:index, :show, :destroy]
-    
     # 投稿管理
     resources :posts, only: [:index, :show, :destroy]
     

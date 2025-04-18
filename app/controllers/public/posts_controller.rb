@@ -7,6 +7,8 @@ class Public::PostsController < ApplicationController
   def index
     @posts = Post.includes(:user, :tags).order(created_at: :desc).page(params[:page]).per(10)
     @tags = Tag.all # 検索フォーム用
+    @users = User.all # ユーザー一覧を追加
+    @selected_user_id = params[:user_id] # 選択されたユーザーIDを追加
   end
 
   # 投稿詳細
@@ -25,9 +27,6 @@ class Public::PostsController < ApplicationController
     @post = current_user.posts.new(post_params)
     
     if @post.save
-      # タグの関連付け
-      save_tags if params[:post][:tag_ids].present?
-      
       redirect_to post_path(@post), notice: "投稿が完了しました"
     else
       @tags = Tag.all
@@ -44,12 +43,6 @@ class Public::PostsController < ApplicationController
   # 投稿更新処理
   def update
     if @post.update(post_params)
-      # 既存のタグをすべて削除
-      @post.post_tags.destroy_all
-      
-      # タグの関連付けを更新
-      save_tags if params[:post][:tag_ids].present?
-      
       redirect_to post_path(@post), notice: "投稿を更新しました"
     else
       @tags = Tag.all
@@ -57,7 +50,7 @@ class Public::PostsController < ApplicationController
       render :edit
     end
   end
-
+  
   # 投稿削除処理
   def destroy
     if @post.destroy
@@ -72,6 +65,8 @@ class Public::PostsController < ApplicationController
   def search
     @keyword = params[:keyword]
     @tags = Tag.all # 検索フォーム用
+    @users = User.all # ユーザー一覧を追加
+    @selected_user_id = params[:user_id] # 選択されたユーザーIDを追加
     
     begin
       # tag_ids パラメータの処理
@@ -90,6 +85,11 @@ class Public::PostsController < ApplicationController
                   .order(created_at: :desc)
                   .page(params[:page])
                   .per(10)
+                  
+      # ユーザーIDによるフィルタリングを追加
+      if @selected_user_id.present?
+        @posts = @posts.where(user_id: @selected_user_id)
+      end
     rescue => e
       Rails.logger.error "検索エラー: #{e.message}"
       Rails.logger.error e.backtrace.join("\n")
@@ -120,19 +120,5 @@ class Public::PostsController < ApplicationController
   # ストロングパラメータ
   def post_params
     params.require(:post).permit(:title, :body, :image, tag_ids: [])
-  end
-  
-  # タグを保存するメソッド
-  def save_tags
-    # ブランクでないタグIDを取得
-    valid_tag_ids = params[:post][:tag_ids].reject(&:blank?)
-    
-    # タグがあれば処理
-    return if valid_tag_ids.empty?
-    
-    # タグを関連付け
-    valid_tag_ids.each do |tag_id|
-      @post.post_tags.create(tag_id: tag_id)
-    end
   end
 end
