@@ -24,38 +24,47 @@
       <div class="form-text">例: 「Railsでいいね機能を実装しました」、「JavaScriptの勉強方法について」</div>
     </div>
     
-    <%# 本文入力フィールド %>
     <div class="mb-3">
-      <%= f.label :body, "本文", class: "form-label" %>
-      <%= f.text_area :body, rows: 10, class: "form-control", placeholder: "本文を入力してください" %>
-      <div class="form-text">学習内容や気づきを自由に書いてみましょう。コードも共有できます。</div>
-    </div>
-    
-    <%# タグ選択フィールド %>
-    <div class="mb-4">
-      <label class="form-label">タグ（複数選択可）</label>
-      <div class="tag-selection">
-        <% if @tags.present? %>
-          <%# タグが存在する場合、チェックボックスで表示 %>
-          <div class="row">
-            <% @tags.each do |tag| %>
-              <div class="col-md-3 mb-2">
-                <div class="form-check">
-                  <%= check_box_tag 'post[tag_ids][]', tag.id, false, 
-                                    id: "tag_#{tag.id}", class: "form-check-input" %>
-                  <%= label_tag "tag_#{tag.id}", tag.name, class: "form-check-label" %>
-                </div>
+  <%= f.label :body, "本文", class: "form-label" %>
+  <%= f.text_area :body, rows: 10, class: "form-control font-monospace", placeholder: "本文を入力してください（マークダウン記法が使えます）" %>
+  <div class="form-text">
+    <strong>マークダウン記法が使えます：</strong>
+    <ul class="small">
+      <li><code># 見出し</code> - 見出し (# の数で大きさ変更)</li>
+      <li><code>**太字**</code> - <strong>太字</strong></li>
+      <li><code>*斜体*</code> - <em>斜体</em></li>
+      <li><code>```コード```</code> - コードブロック</li>
+      <li><code>[リンク](URL)</code> - リンク</li>
+      <li><code>![代替テキスト](画像URL)</code> - 画像</li>
+    </ul>
+  </div>
+</div>
+
+  <%# タグ選択フィールド %>
+  <div class="mb-4">
+    <label class="form-label">タグ（複数選択可）</label>
+    <div class="tag-selection">
+      <% if @tags.present? %>
+        <%# タグが存在する場合、チェックボックスで表示 %>
+        <div class="row">
+          <% @tags.each do |tag| %>
+            <div class="col-md-3 mb-2">
+              <div class="form-check">
+                <%= check_box_tag 'post[tag_ids][]', tag.id, @post.tags.include?(tag), 
+                                  id: "tag_#{tag.id}", class: "form-check-input" %>
+                <%= label_tag "tag_#{tag.id}", tag.name, class: "form-check-label" %>
               </div>
-            <% end %>
-          </div>
-        <% else %>
-          <%# タグが存在しない場合のメッセージ %>
-          <p class="text-muted">利用可能なタグがありません。管理者にタグの作成を依頼してください。</p>
-        <% end %>
-        <div class="form-text">投稿に関連するタグを選択してください。複数選択可能です。</div>
-      </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <%# タグが存在しない場合のメッセージ %>
+        <p class="text-muted">利用可能なタグがありません。管理者にタグの作成を依頼してください。</p>
+      <% end %>
+      <div class="form-text">投稿に関連するタグを選択してください。複数選択可能です。</div>
     </div>
-    
+  </div>
+
     <%# 画像アップロードフィールド %>
     <div class="mb-4">
       <%= f.label :image, "画像（任意）", class: "form-label" %>

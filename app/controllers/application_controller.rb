@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
       root_path  # 一般ユーザーのトップページ
     end
   end
+
+  # MarkdownHelperを全コントローラーで使えるようにする
+  helper :all
   
   protected
   

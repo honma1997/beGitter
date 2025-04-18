@@ -9,8 +9,11 @@ import 'bootstrap'
 import 'jquery'
 
 // スタイルシートをインポート
-import '../stylesheets/application'
+import '../stylesheets/application.scss'
 
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+// 検索フォーム用のJavaScript
+import './search_form'
