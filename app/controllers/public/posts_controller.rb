@@ -99,6 +99,17 @@ class Public::PostsController < ApplicationController
     
     render :index
   end
+
+  def show
+    @post = Post.find_by(id: params[:id])
+    unless @post
+      redirect_to posts_path, alert: "その投稿はすでに削除されています。"
+      return
+    end
+    
+    @comment = Comment.new
+    @comments = @post.comments.includes(:user).order(created_at: :desc)
+  end
   
   private
   
