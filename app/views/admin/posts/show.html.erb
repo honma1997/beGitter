@@ -1,151 +1,182 @@
-<%# 投稿本文 %>
-      <div class="markdown-content mb-4">
-        <%= markdown(@post.body) %>
-      </div>
-      
-      <%# タグ一覧 %>
-      <div class="post-tags mb-3">
-        <h6>タグ</h6>
-        <% if @post.tags.present? %>
-          <div class="d-flex flex-wrap gap-1">
-            <% @post.tags.each do |tag| %>
-              <%= link_to admin_tags_path(tag_ids: tag.id), class: "badge bg-secondary text-decoration-none" do %>
-                <%= tag.name %>
-              <% end %>
-            <% end %>
-          </div>
-        <% else %>
-          <p class="text-muted small mb-0">タグはありません</p>
-        <% end %>
-      </div>
-      
-      <%# 投稿情報 %>
-      <div class="post-meta">
-        <div class="row">
-          <div class="col-md-6">
-            <p class="mb-1"><strong>投稿日時:</strong> <%= @post.created_at.strftime('%Y/%m/%d %H:%M:%S') %></p>
-            <p class="mb-1"><strong>更新日時:</strong> <%= @post.updated_at.strftime('%Y/%m/%d %H:%M:%S') %></p>
-          </div>
-          <div class="col-md-6">
-            <p class="mb-1"><strong>いいね数:</strong> <%= @post.likes.count %></p>
-            <p class="mb-1"><strong>コメント数:</strong> <%= @post.comments.count %></p>
-          </div>
-        </div>
-      </div>
+<%# 管理者用 投稿詳細ページ %>
+<div class="admin-post-show">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><%= @post.title %></h1>
+    <div>
+      <%= link_to admin_posts_path, class: "btn btn-outline-secondary me-2" do %>
+        <i class="fas fa-arrow-left"></i> 投稿一覧に戻る
+      <% end %>
+      <%= link_to admin_post_path(@post), method: :delete, data: { confirm: "この投稿を削除しますか？", turbo: false }, class: "btn btn-outline-danger" do %>
+        <i class="fas fa-trash"></i> 削除
+      <% end %>
     </div>
   </div>
   
-  <%# コメント一覧 %>
-  <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">コメント一覧</h5>
-      <span class="badge bg-secondary"><%= @post.comments.count %> 件</span>
-    </div>
-    <div class="card-body p-0">
-      <% if @post.comments.present? %>
-        <div class="list-group list-group-flush">
-          <% @post.comments.order(created_at: :desc).each do |comment| %>
-            <div class="list-group-item">
-              <div class="d-flex justify-content-between align-items-start mb-1">
-                <div>
-                  <strong>
-                    <%= link_to comment.user.name, admin_user_path(comment.user), class: "text-decoration-none" %>
-                  </strong>
-                  <span class="badge bg-info text-white ms-1"><%= comment.user.phase_in_japanese %></span>
-                </div>
-                <div class="d-flex align-items-center">
-                  <small class="text-muted me-2"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
-                  <%= link_to "#", data: { confirm: "このコメントを削除しますか？", turbo: false }, class: "text-danger" do %>
-                    <i class="fas fa-trash-alt" title="削除"></i>
+  <div class="row mb-4">
+    <%# 投稿情報 %>
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">投稿内容</h5>
+        </div>
+        <div class="card-body">
+          <%# 投稿画像（あれば表示） - ここを修正 %>
+          <% if @post.image.attached? %>
+            <div class="post-image mb-4 text-center">
+              <%= image_tag @post.image, class: "img-fluid rounded", style: "max-width: 100%; max-height: 300px;" %>
+            </div>
+          <% end %>
+          
+          <%# 投稿本文 %>
+          <div class="markdown-content mb-4">
+            <%= markdown(@post.body) %>
+          </div>
+          
+          <%# タグ一覧 %>
+          <div class="post-tags mb-3">
+            <h6>タグ</h6>
+            <% if @post.tags.present? %>
+              <div class="d-flex flex-wrap gap-1">
+                <% @post.tags.each do |tag| %>
+                  <%= link_to admin_tags_path(tag_ids: tag.id), class: "badge bg-secondary text-decoration-none" do %>
+                    <%= tag.name %>
                   <% end %>
-                </div>
+                <% end %>
               </div>
-              <p class="mb-0"><%= comment.body %></p>
+            <% else %>
+              <p class="text-muted small mb-0">タグはありません</p>
+            <% end %>
+          </div>
+          
+          <%# 投稿情報 %>
+          <div class="post-meta">
+            <div class="row">
+              <div class="col-md-6">
+                <p class="mb-1"><strong>投稿日時:</strong> <%= @post.created_at.strftime('%Y/%m/%d %H:%M:%S') %></p>
+                <p class="mb-1"><strong>更新日時:</strong> <%= @post.updated_at.strftime('%Y/%m/%d %H:%M:%S') %></p>
+              </div>
+              <div class="col-md-6">
+                <p class="mb-1"><strong>いいね数:</strong> <%= @post.likes.count %></p>
+                <p class="mb-1"><strong>コメント数:</strong> <%= @post.comments.count %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <%# コメント一覧 %>
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">コメント一覧</h5>
+          <span class="badge bg-secondary"><%= @post.comments.count %> 件</span>
+        </div>
+        <div class="card-body p-0">
+          <% if @post.comments.present? %>
+            <div class="list-group list-group-flush">
+              <% @post.comments.order(created_at: :desc).each do |comment| %>
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <div>
+                      <strong>
+                        <%= link_to comment.user.name, admin_user_path(comment.user), class: "text-decoration-none" %>
+                      </strong>
+                      <span class="badge bg-info text-white ms-1"><%= comment.user.phase_in_japanese %></span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <small class="text-muted me-2"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
+                      <%= link_to "#", data: { confirm: "このコメントを削除しますか？", turbo: false }, class: "text-danger" do %>
+                        <i class="fas fa-trash-alt" title="削除"></i>
+                      <% end %>
+                    </div>
+                  </div>
+                  <p class="mb-0"><%= comment.body %></p>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="p-4 text-center">
+              <p class="text-muted mb-0">コメントはまだありません</p>
             </div>
           <% end %>
         </div>
-      <% else %>
-        <div class="p-4 text-center">
-          <p class="text-muted mb-0">コメントはまだありません</p>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
-
-<%# サイドバー：投稿者情報 %>
-<div class="col-md-4">
-  <div class="card border-0 shadow-sm mb-4">
-    <div class="card-header bg-white">
-      <h5 class="mb-0">投稿者情報</h5>
-    </div>
-    <div class="card-body">
-      <div class="text-center mb-3">
-        <% if @post.user.profile_image.attached? %>
-          <%= image_tag @post.user.profile_image, class: "rounded-circle img-thumbnail", style: "width: 100px; height: 100px; object-fit: cover;" %>
-        <% else %>
-          <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center" style="width: 100px; height: 100px;">
-            <i class="fas fa-user fa-3x text-secondary"></i>
-          </div>
-        <% end %>
       </div>
-      
-      <h5 class="text-center mb-3"><%= link_to @post.user.name, admin_user_path(@post.user), class: "text-decoration-none" %></h5>
-      
-      <div class="user-info mb-3">
-        <p class="mb-1"><strong>メールアドレス:</strong> <%= @post.user.email %></p>
-        <p class="mb-1"><strong>学習フェーズ:</strong> <%= @post.user.phase_in_japanese %></p>
-        <p class="mb-1"><strong>登録日:</strong> <%= @post.user.created_at.strftime('%Y/%m/%d') %></p>
-      </div>
-      
-      <div class="user-stats d-flex justify-content-around text-center mb-3">
-        <div>
-          <h5><%= @post.user.posts.count %></h5>
-          <p class="text-muted small">投稿</p>
-        </div>
-        <div>
-          <h5><%= @post.user.comments.count %></h5>
-          <p class="text-muted small">コメント</p>
-        </div>
-        <div>
-          <h5><%= @post.user.followers.count %></h5>
-          <p class="text-muted small">フォロワー</p>
-        </div>
-      </div>
-      
-      <%= link_to admin_user_path(@post.user), class: "btn btn-outline-primary w-100" do %>
-        <i class="fas fa-user"></i> ユーザー詳細を見る
-      <% end %>
     </div>
-  </div>
-  
-  <%# 同一ユーザーの他の投稿 %>
-  <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white">
-      <h5 class="mb-0">同じユーザーの他の投稿</h5>
-    </div>
-    <div class="card-body p-0">
-      <div class="list-group list-group-flush">
-        <% other_posts = @post.user.posts.where.not(id: @post.id).order(created_at: :desc).limit(5) %>
-        <% if other_posts.present? %>
-          <% other_posts.each do |post| %>
-            <%= link_to admin_post_path(post), class: "list-group-item list-group-item-action" do %>
-              <div class="d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-truncate"><%= post.title %></h6>
-                <small class="text-muted ms-2 text-nowrap"><%= post.created_at.strftime('%Y/%m/%d') %></small>
+    
+    <%# サイドバー：投稿者情報 %>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">投稿者情報</h5>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <% if @post.user.profile_image.attached? %>
+              <%= image_tag @post.user.profile_image, class: "rounded-circle img-thumbnail", style: "width: 100px; height: 100px; object-fit: cover;" %>
+            <% else %>
+              <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center" style="width: 100px; height: 100px;">
+                <i class="fas fa-user fa-3x text-secondary"></i>
               </div>
             <% end %>
-          <% end %>
-          <% if @post.user.posts.count > 6 %>
-            <%= link_to admin_posts_path(user_id: @post.user.id), class: "list-group-item list-group-item-action text-center" do %>
-              <small>すべての投稿を見る</small>
-            <% end %>
-          <% end %>
-        <% else %>
-          <div class="list-group-item">
-            <p class="text-muted mb-0">他の投稿はありません</p>
           </div>
-        <% end %>
+          
+          <h5 class="text-center mb-3"><%= link_to @post.user.name, admin_user_path(@post.user), class: "text-decoration-none" %></h5>
+          
+          <div class="user-info mb-3">
+            <p class="mb-1"><strong>メールアドレス:</strong> <%= @post.user.email %></p>
+            <p class="mb-1"><strong>学習フェーズ:</strong> <%= @post.user.phase_in_japanese %></p>
+            <p class="mb-1"><strong>登録日:</strong> <%= @post.user.created_at.strftime('%Y/%m/%d') %></p>
+          </div>
+          
+          <div class="user-stats d-flex justify-content-around text-center mb-3">
+            <div>
+              <h5><%= @post.user.posts.count %></h5>
+              <p class="text-muted small">投稿</p>
+            </div>
+            <div>
+              <h5><%= @post.user.comments.count %></h5>
+              <p class="text-muted small">コメント</p>
+            </div>
+            <div>
+              <h5><%= @post.user.followers.count %></h5>
+              <p class="text-muted small">フォロワー</p>
+            </div>
+          </div>
+          
+          <%= link_to admin_user_path(@post.user), class: "btn btn-outline-primary w-100" do %>
+            <i class="fas fa-user"></i> ユーザー詳細を見る
+          <% end %>
+        </div>
+      </div>
+      
+      <%# 同一ユーザーの他の投稿 %>
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">同じユーザーの他の投稿</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <% other_posts = @post.user.posts.where.not(id: @post.id).order(created_at: :desc).limit(5) %>
+            <% if other_posts.present? %>
+              <% other_posts.each do |post| %>
+                <%= link_to admin_post_path(post), class: "list-group-item list-group-item-action" do %>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 text-truncate"><%= post.title %></h6>
+                    <small class="text-muted ms-2 text-nowrap"><%= post.created_at.strftime('%Y/%m/%d') %></small>
+                  </div>
+                <% end %>
+              <% end %>
+              <% if @post.user.posts.count > 6 %>
+                <%= link_to admin_posts_path(user_id: @post.user.id), class: "list-group-item list-group-item-action text-center" do %>
+                  <small>すべての投稿を見る</small>
+                <% end %>
+              <% end %>
+            <% else %>
+              <div class="list-group-item">
+                <p class="text-muted mb-0">他の投稿はありません</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
