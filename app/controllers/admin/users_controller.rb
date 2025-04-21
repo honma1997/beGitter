@@ -1,9 +1,20 @@
 class Admin::UsersController < Admin::ApplicationController
   # ユーザー一覧
   def index
-    @users = User.includes(:posts).order(created_at: :desc).page(params[:page]).per(20)
-    @user_count = User.count
-    @post_count = Post.count
+    @users = User.all
+  
+    # キーワード検索
+    if params[:keyword].present?
+      @users = @users.where("name LIKE ? OR email LIKE ?", "%#{params[:keyword]}%", "%#{params[:keyword]}%")
+    end
+  
+    # 学習フェーズ絞り込み
+    if params[:phase].present?
+      @users = @users.where(phase: params[:phase])
+    end
+  
+    # ページネーション
+    @users = @users.order(created_at: :desc).page(params[:page]).per(20)
   end
 
   # ユーザー詳細
