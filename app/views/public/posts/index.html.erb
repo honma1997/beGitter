@@ -88,6 +88,29 @@
                   </div>
                 <% end %>
                 
+                <%# いいねとコメント数の表示 %>
+                <div class="d-flex gap-2 mt-2 mb-2">
+                  <% if user_signed_in? %>
+                    <% if post.liked_by?(current_user) %>
+                      <%= button_to post_like_path(post), method: :delete, class: "btn btn-sm btn-danger" do %>
+                        <i class="fas fa-heart"></i> <%= post.likes.count %>
+                      <% end %>
+                    <% else %>
+                      <%= button_to post_like_path(post), method: :post, class: "btn btn-sm btn-outline-danger" do %>
+                        <i class="far fa-heart"></i> <%= post.likes.count %>
+                      <% end %>
+                    <% end %>
+                  <% else %>
+                    <span class="badge bg-secondary">
+                      <i class="far fa-heart"></i> <%= post.likes.count %>
+                    </span>
+                  <% end %>
+                  
+                  <span class="badge bg-secondary">
+                    <i class="far fa-comment"></i> <%= post.comments.count %>
+                  </span>
+                </div>
+                
                 <%# 投稿日時 %>
                 <div class="card-text mt-2">
                   <small class="text-muted">投稿日: <%= post.created_at.strftime('%Y/%m/%d %H:%M') %></small>

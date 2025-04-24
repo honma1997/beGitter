@@ -13,6 +13,11 @@ class Post < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
   
+  # いいね関連メソッド
+  def liked_by?(user)
+    likes.exists?(user_id: user.id)
+  end
+  
   # 検索メソッド
   def self.search(keyword, tag_ids = nil, user_id = nil, start_date = nil, end_date = nil)
     posts = all
