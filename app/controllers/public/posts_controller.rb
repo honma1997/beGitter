@@ -13,7 +13,14 @@ class Public::PostsController < ApplicationController
 
   # 投稿詳細
   def show
+    @post = Post.find_by(id: params[:id])
+    unless @post
+      redirect_to posts_path, alert: "その投稿はすでに削除されています。"
+      return
+    end
+    
     @comment = Comment.new
+    @comments = @post.comments.includes(:user).order(created_at: :desc)
   end
 
   # 新規投稿フォーム
@@ -80,16 +87,15 @@ class Public::PostsController < ApplicationController
                             []
                           end
       
+      # 日付パラメータの処理
+      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : nil
+      @end_date = params[:end_date].present? ? Date.parse(params[:end_date]) : nil
+      
       @posts = Post.includes(:user, :tags)
-                  .search(@keyword, @selected_tag_ids)
+                  .search(@keyword, @selected_tag_ids, @selected_user_id, @start_date, @end_date)
                   .order(created_at: :desc)
                   .page(params[:page])
                   .per(10)
-                  
-      # ユーザーIDによるフィルタリングを追加
-      if @selected_user_id.present?
-        @posts = @posts.where(user_id: @selected_user_id)
-      end
     rescue => e
       Rails.logger.error "検索エラー: #{e.message}"
       Rails.logger.error e.backtrace.join("\n")
@@ -100,17 +106,6 @@ class Public::PostsController < ApplicationController
     render :index
   end
 
-  def show
-    @post = Post.find_by(id: params[:id])
-    unless @post
-      redirect_to posts_path, alert: "その投稿はすでに削除されています。"
-      return
-    end
-    
-    @comment = Comment.new
-    @comments = @post.comments.includes(:user).order(created_at: :desc)
-  end
-  
   private
   
   # 投稿を取得するメソッド
