@@ -9,21 +9,20 @@ class Public::CommentsController < ApplicationController
     if @comment.save
       redirect_to post_path(@post), notice: "コメントを投稿しました"
     else
-      # コメント投稿失敗時は投稿詳細ページに戻る
-      @comments = @post.comments.includes(:user).order(created_at: :desc)
-      render 'public/posts/show'
+      # エラー処理
+      redirect_to post_path(@post), alert: "コメントの投稿に失敗しました。#{@comment.errors.full_messages.join(', ')}"
     end
   end
 
   def destroy
     @comment = Comment.find(params[:id])
+    @post = @comment.post
     
-    # コメント投稿者または投稿者本人のみ削除可能
-    if @comment.user == current_user || @comment.post.user == current_user
+    if @comment.user == current_user
       @comment.destroy
-      redirect_to post_path(params[:post_id]), notice: "コメントを削除しました"
+      redirect_to post_path(@post), notice: "コメントを削除しました"
     else
-      redirect_to post_path(params[:post_id]), alert: "削除権限がありません"
+      redirect_to post_path(@post), alert: "他のユーザーのコメントは削除できません"
     end
   end
   

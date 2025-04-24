@@ -1,4 +1,3 @@
-<!-- app/views/public/posts/show.html.erb -->
 <%# 投稿詳細ページ %>
 <div class="container">
   <div class="post-details">
@@ -24,6 +23,25 @@
           <% end %>
         </div>
       </div>
+    </div>
+    
+    <%# いいねボタンとカウント表示 %>
+    <div class="post-likes mb-3">
+      <% if user_signed_in? %>
+        <% if @post.liked_by?(current_user) %>
+          <%= button_to post_like_path(@post), method: :delete, class: "btn btn-sm btn-danger" do %>
+            <i class="fas fa-heart"></i> いいね解除 (<%= @post.likes.count %>)
+          <% end %>
+        <% else %>
+          <%= button_to post_like_path(@post), method: :post, class: "btn btn-sm btn-outline-danger" do %>
+            <i class="far fa-heart"></i> いいね (<%= @post.likes.count %>)
+          <% end %>
+        <% end %>
+      <% else %>
+        <span class="badge bg-secondary">
+          <i class="far fa-heart"></i> いいね (<%= @post.likes.count %>)
+        </span>
+      <% end %>
     </div>
         
     <%# 投稿者本人の場合のみ編集/削除ボタンを表示 %>
@@ -67,57 +85,54 @@
       </div>
     </div>
     
-    <%# コメント一覧 %>
-    <div class="comments-section mt-5">
-      <h4 class="mb-3">コメント (<%= @post.comments.count %>)</h4>
-      
-      <%# コメント投稿フォーム（ログイン中のみ表示） %>
-      <% if user_signed_in? %>
-        <div class="comment-form mb-4">
-          <%= form_with model: [@post, @comment], local: true do |f| %>
-            <div class="form-group">
-              <%= f.text_area :body, rows: 3, class: "form-control", placeholder: "コメントを入力してください" %>
-            </div>
-            <div class="mt-2">
-              <%= f.submit "コメントする", class: "btn btn-primary" %>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <div class="alert alert-info mb-4">
-          コメントを投稿するには<%= link_to "ログイン", new_user_session_path, class: "alert-link" %>が必要です。
-        </div>
-      <% end %>
+    <%# コメント欄の追加 %>
+    <div class="post-comments mb-4">
+      <h5>コメント（<%= @post.comments.count %>件）</h5>
       
       <%# コメント一覧 %>
-      <div class="comments-list">
+      <div class="comment-list mb-3">
         <% if @post.comments.present? %>
           <% @post.comments.order(created_at: :desc).each do |comment| %>
-            <div class="card mb-3">
+            <div class="card mb-2">
               <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <div>
-                    <%= link_to comment.user.name, user_path(comment.user), class: "fw-bold" %>
-                    <small class="text-muted ms-2"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
-                  </div>
+                <h6 class="card-subtitle mb-2 text-muted">
+                  <%= link_to comment.user.name, user_path(comment.user) %> - 
+                  <small><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
                   
-                  <%# コメント削除ボタン（投稿者自身かコメント投稿者の場合のみ表示） %>
-                  <% if current_user == comment.user || current_user == @post.user %>
-                    <%= link_to post_comment_path(@post, comment), method: :delete, data: { confirm: "このコメントを削除しますか？" }, class: "text-danger" do %>
+                  <%# コメント投稿者本人の場合のみ削除ボタンを表示 %>
+                  <% if comment.user == current_user %>
+                    <%= button_to post_comment_path(@post, comment), method: :delete, 
+                        class: "btn btn-sm btn-outline-danger float-end", 
+                        data: { confirm: "このコメントを削除しますか？" } do %>
                       <i class="fas fa-trash-alt"></i>
                     <% end %>
                   <% end %>
-                </div>
-                <p class="card-text mb-0"><%= comment.body %></p>
+                </h6>
+                <p class="card-text"><%= comment.body %></p>
               </div>
             </div>
           <% end %>
         <% else %>
-          <div class="text-center text-muted my-4">
-            <p>まだコメントはありません。最初のコメントを投稿しましょう！</p>
-          </div>
+          <p class="text-muted">まだコメントはありません。</p>
         <% end %>
       </div>
+      
+      <%# コメントフォーム（ログイン済みの場合のみ表示） %>
+      <% if user_signed_in? %>
+        <div class="comment-form">
+          <h6>コメントを投稿する</h6>
+          <%= form_with(model: [@post, @comment], local: true) do |f| %>
+            <div class="mb-3">
+              <%= f.text_area :body, rows: 3, class: "form-control", placeholder: "コメントを入力してください" %>
+            </div>
+            <%= f.submit "コメントする", class: "btn btn-primary btn-sm" %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="alert alert-info">
+          コメントを投稿するには <%= link_to "ログイン", new_user_session_path %> してください。
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
