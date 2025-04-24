@@ -24,19 +24,24 @@
           <!-- 投稿数・フォロー・フォロワー -->
           <div class="row text-center mb-4">
             <div class="col-4">
-              <h5><%= @user.posts.count %></h5>
-              <p class="text-muted small">投稿</p>
+              <%= link_to user_path(@user), class: "text-decoration-none text-dark" do %>
+                <h5><%= @user.posts.count %></h5>
+                <p class="text-muted small">投稿</p>
+              <% end %>
             </div>
             <div class="col-4">
-              <h5><%= @user.followings.count %></h5>
-              <p class="text-muted small">フォロー</p>
+              <%= link_to followings_user_path(@user), class: "text-decoration-none text-dark" do %>
+                <h5><%= @user.followings.count %></h5>
+                <p class="text-muted small">フォロー</p>
+              <% end %>
             </div>
             <div class="col-4">
-              <h5><%= @user.followers.count %></h5>
-              <p class="text-muted small">フォロワー</p>
+              <%= link_to followers_user_path(@user), class: "text-decoration-none text-dark" do %>
+                <h5><%= @user.followers.count %></h5>
+                <p class="text-muted small">フォロワー</p>
+              <% end %>
             </div>
           </div>
-          
           <!-- 登録日 -->
           <p class="text-muted small">登録日: <%= @user.created_at.strftime('%Y/%m/%d') %></p>
           
