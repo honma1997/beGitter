@@ -16,6 +16,11 @@ Rails.application.routes.draw do
     get 'mypage', to: 'users#mypage'
     resources :users do
       resource :relationship, only: [:create, :destroy]
+      # フォロー・フォロワー一覧ページのルーティングを追加
+      member do
+        get :followings
+        get :followers
+      end
       collection do
         get :search
       end

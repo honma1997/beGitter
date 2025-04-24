@@ -53,6 +53,18 @@ class Public::UsersController < ApplicationController
     render :index
   end
 
+  def followings
+    @user = User.find(params[:id])
+    @users = @user.followings.page(params[:page]).per(12)
+    render 'followings'
+  end
+  
+  def followers
+    @user = User.find(params[:id])
+    @users = @user.followers.page(params[:page]).per(12)
+    render 'followers'
+  end
+
   private
 
   def set_user
