@@ -80,4 +80,12 @@ class Public::UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :email, :phase, :profile_image)
   end
+
+  # ゲストユーザーかどうかをチェックするメソッド
+  def check_guest
+    if current_user.guest?
+      redirect_to mypage_path, alert: "ゲストユーザーはプロフィール編集と退会ができません。"
+    end
+  end
+  
 end

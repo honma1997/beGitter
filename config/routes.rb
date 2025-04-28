@@ -35,6 +35,11 @@ Rails.application.routes.draw do
     resources :tags, only: [:index, :show]
   end
 
+  # ゲストログイン用ルーティングを追加
+  devise_scope :user do
+    post 'users/guest_sign_in', to: 'public/guest_sessions#create', as: 'guest_sign_in'
+  end
+
   # 管理者用
   namespace :admin do
     # 管理者のルートページはユーザー一覧
