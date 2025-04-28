@@ -70,4 +70,19 @@ class User < ApplicationRecord
   def unfollow(user)
     relationships.find_by(followed_id: user.id)&.destroy
   end
+
+  # ゲストユーザー作成・取得用のメソッド
+  def self.guest
+    find_or_create_by!(email: 'guest@example.com') do |user|
+      user.password = SecureRandom.urlsafe_base64
+      user.name = 'ゲストユーザー'
+      user.phase = :basic_learning
+    end
+  end
+  
+  # ゲストユーザーかどうかをチェックするメソッド
+  def guest?
+    email == 'guest@example.com'
+  end
+  
 end
