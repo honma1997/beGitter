@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_10_010736) do
+ActiveRecord::Schema.define(version: 2025_05_01_150747) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -112,7 +112,9 @@ ActiveRecord::Schema.define(version: 2025_04_10_010736) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", null: false
     t.integer "phase", default: 0
+    t.string "github_username"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["github_username"], name: "index_users_on_github_username", length: 191
     t.index ["name"], name: "index_users_on_name", length: 191
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

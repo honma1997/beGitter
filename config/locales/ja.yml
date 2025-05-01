@@ -65,6 +65,7 @@ ja:
         password_confirmation: "パスワード（確認）"
         phase: "学習フェーズ"
         current_password: "現在のパスワード"
+        github_username: "GitHubユーザー名"
       post:
         title: "タイトル"
         body: "本文"
@@ -91,6 +92,8 @@ ja:
               too_short: "は%{count}文字以上で入力してください"
             password_confirmation:
               confirmation: "がパスワードと一致しません"
+            github_username:
+              invalid: "は英数字とハイフンのみ使用できます"
   errors:
     messages:
       blank: "を入力してください"
