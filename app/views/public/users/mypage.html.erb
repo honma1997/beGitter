@@ -42,7 +42,15 @@
                 <p class="text-muted small">フォロワー</p>
               <% end %>
             </div>
-          </div>          
+          </div>
+          <!-- GitHubリンク -->
+          <% if @user.github_username.present? %>
+            <p class="mb-3">
+              <a href="https://github.com/<%= @user.github_username %>" target="_blank" class="btn btn-outline-dark btn-sm">
+                <i class="fab fa-github me-1"></i> GitHub: <%= @user.github_username %>
+              </a>
+            </p>
+          <% end %>
           <!-- 登録日 -->
           <p class="text-muted small">登録日: <%= @user.created_at.strftime('%Y/%m/%d') %></p>
           

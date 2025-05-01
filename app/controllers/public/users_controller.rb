@@ -78,9 +78,9 @@ class Public::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :phase, :profile_image)
+    params.require(:user).permit(:name, :email, :phase, :profile_image, :github_username)
   end
-
+  
   # ゲストユーザーかどうかをチェックするメソッド
   def check_guest
     if current_user.guest?

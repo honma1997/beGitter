@@ -52,6 +52,15 @@
               <% end %>
             </div>
             
+            <div class="mb-3">
+              <%= f.label :github_username, "GitHubユーザー名", class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fab fa-github"></i></span>
+                <%= f.text_field :github_username, class: "form-control", placeholder: "GitHubのユーザー名" %>
+              </div>
+              <div class="form-text">GitHubのユーザー名を入力すると、プロフィールにGitHubアカウントへのリンクが表示されます</div>
+            </div>
+
             <% if defined?(@user.profile_image) && @user.profile_image.attached? %>
               <div class="mb-3">
                 <label class="form-label">現在のプロフィール画像</label>
