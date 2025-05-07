@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   # 一般ユーザー用
   scope module: :public do
     get 'mypage', to: 'users#mypage'
+    # GitHub連携用のルーティングを追加
+    get 'connect_github', to: 'users#connect_github'
     resources :users do
       resource :relationship, only: [:create, :destroy]
       # フォロー・フォロワー一覧ページのルーティングを追加

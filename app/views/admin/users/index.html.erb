@@ -68,10 +68,10 @@
           <%# ページネーションの表示 %>
           <div class="pagination-container">
             <div class="pagination-info">
-              <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+              <%= "全#{@users.total_count}件中 #{@users.offset_value + 1}〜#{@users.offset_value + @users.length}件表示" %>
             </div>
             <div class="d-flex justify-content-center">
-              <%= paginate @posts %>
+              <%= paginate @users %>
             </div>
           </div>
         <% else %>

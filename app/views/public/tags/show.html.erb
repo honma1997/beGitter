@@ -1,2 +1,90 @@
-<h1>Public::Tags#show</h1>
-<p>Find me in app/views/public/tags/show.html.erb</p>
+<div class="container my-4">
+  <div class="mb-4">
+    <h1 class="mb-2">
+      <span class="badge bg-secondary me-2"><%= @tag.name %></span>
+      タグのついた投稿
+    </h1>
+    <p>
+      <small class="text-muted"><%= @posts.total_count %>件の投稿が見つかりました</small>
+      <%= link_to tags_path, class: "ms-3 btn btn-sm btn-outline-secondary" do %>
+        <i class="fas fa-tags me-1"></i> タグ一覧に戻る
+      <% end %>
+    </p>
+  </div>
+  
+  <% if @posts.present? %>
+    <div class="posts-container">
+      <% @posts.each do |post| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <% if post.image.attached? %>
+                <div class="col-md-3 mb-3 mb-md-0">
+                  <%= image_tag post.image, class: "img-fluid rounded post-thumbnail", style: "width: 100%; height: 140px; object-fit: cover;" %>
+                </div>
+                <div class="col-md-9">
+              <% else %>
+                <div class="col-12">
+              <% end %>
+                <h5 class="card-title mb-2">
+                  <%= link_to post.title, post_path(post), class: "text-decoration-none" %>
+                </h5>
+                
+                <div class="d-flex align-items-center mb-2">
+                  <% if post.user.profile_image.attached? %>
+                    <%= image_tag post.user.profile_image, class: "rounded-circle me-2", style: "width: 30px; height: 30px; object-fit: cover;" %>
+                  <% else %>
+                    <div class="bg-light rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 30px; height: 30px;">
+                      <i class="fas fa-user text-secondary"></i>
+                    </div>
+                  <% end %>
+                  <span><%= post.user.name %> さん</span>
+                  <span class="ms-2 badge bg-info text-white"><%= post.user.phase_in_japanese %></span>
+                </div>
+                
+                <div class="card-text mb-3 post-content">
+                  <% truncated_content = strip_tags(post.body).truncate(150, separator: ' ', omission: '...') %>
+                  <% paragraphs = truncated_content.split("\n").reject(&:blank?) %>
+                  <% paragraphs.each do |paragraph| %>
+                    <p class="mb-1 text-secondary"><%= paragraph %></p>
+                  <% end %>
+                </div>
+                
+                <div class="post-tags mb-2">
+                  <% post.tags.each do |tag| %>
+                    <span class="badge bg-<%= tag.id == @tag.id ? 'primary' : 'secondary' %>">
+                      <%= tag.name %>
+                    </span>
+                  <% end %>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <div class="text-muted small">
+                    <i class="far fa-calendar-alt me-1"></i><%= post.created_at.strftime('%Y/%m/%d %H:%M') %>
+                    <span class="ms-2"><i class="far fa-heart me-1"></i><%= post.likes.count %></span>
+                    <span class="ms-2"><i class="far fa-comment me-1"></i><%= post.comments.count %></span>
+                  </div>
+                  <%= link_to "詳細を見る", post_path(post), class: "btn btn-sm btn-outline-primary" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- ページネーション -->
+      <div class="pagination-container">
+        <div class="pagination-info">
+          <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+        </div>
+        <div class="d-flex justify-content-center">
+          <%= paginate @posts %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      このタグがついた投稿はまだありません。
+    </div>
+  <% end %>
+</div>

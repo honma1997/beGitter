@@ -96,15 +96,20 @@ ja:
               invalid: "は英数字とハイフンのみ使用できます"
   errors:
     messages:
-      blank: "を入力してください"
-      too_short: "は%{count}文字以上で入力してください"
-      confirmation: "が一致しません"
-      not_a_number: "は数値で入力してください"
-      greater_than: "は%{count}より大きい値にしてください"
-      less_than: "は%{count}より小さい値にしてください"
-      taken: "は既に使用されています"
-      invalid: "は不正な値です"
-      record_invalid: "バリデーションに失敗しました: %{errors}"
+        already_confirmed: "は既に確認済みです。ログインしてください。"
+        confirmation_period_expired: "の確認期限が切れました。%{period}以内に確認する必要があります。新しくリクエストしてください。"
+        expired: "の有効期限が切れました。新しくリクエストしてください。"
+        not_found: "は見つかりませんでした。"
+        not_locked: "はロックされていません。"
+        not_saved:
+          one: "1つのエラーが発生したため %{resource} は保存されませんでした："
+          other: "%{count}つのエラーが発生したため %{resource} は保存されませんでした："
+        blank: "を入力してください"
+        invalid: "は不正な値です"
+        too_short: "は%{count}文字以上で入力してください"
+        confirmation: "が一致しません"
+        record_invalid: "バリデーションに失敗しました: %{errors}"
+        taken: "は既に使用されています"
   enums:
     user:
       phase:
