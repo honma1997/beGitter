@@ -11,7 +11,7 @@
       <% end %>
     </div>
   </div>
-  
+
   <div class="row mb-4">
     <%# 投稿情報 %>
     <div class="col-md-8">
@@ -26,12 +26,12 @@
               <%= image_tag @post.image, class: "img-fluid rounded", style: "max-width: 100%; max-height: 300px;" %>
             </div>
           <% end %>
-          
+
           <%# 投稿本文 %>
           <div class="markdown-content mb-4">
             <%= markdown(@post.body) %>
           </div>
-          
+
           <%# タグ一覧 %>
           <div class="post-tags mb-3">
             <h6>タグ</h6>
@@ -47,7 +47,7 @@
               <p class="text-muted small mb-0">タグはありません</p>
             <% end %>
           </div>
-          
+
           <%# 投稿情報 %>
           <div class="post-meta">
             <div class="row">
@@ -63,7 +63,7 @@
           </div>
         </div>
       </div>
-      
+
       <%# コメント一覧 %>
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
@@ -101,7 +101,7 @@
         </div>
       </div>
     </div>
-    
+
     <%# サイドバー：投稿者情報 %>
     <div class="col-md-4">
       <div class="card border-0 shadow-sm mb-4">
@@ -118,15 +118,15 @@
               </div>
             <% end %>
           </div>
-          
+
           <h5 class="text-center mb-3"><%= link_to @post.user.name, admin_user_path(@post.user), class: "text-decoration-none" %></h5>
-          
+
           <div class="user-info mb-3">
             <p class="mb-1"><strong>メールアドレス:</strong> <%= @post.user.email %></p>
             <p class="mb-1"><strong>学習フェーズ:</strong> <%= @post.user.phase_in_japanese %></p>
             <p class="mb-1"><strong>登録日:</strong> <%= @post.user.created_at.strftime('%Y/%m/%d') %></p>
           </div>
-          
+
           <div class="user-stats d-flex justify-content-around text-center mb-3">
             <div>
               <h5><%= @post.user.posts.count %></h5>
@@ -141,13 +141,13 @@
               <p class="text-muted small">フォロワー</p>
             </div>
           </div>
-          
+
           <%= link_to admin_user_path(@post.user), class: "btn btn-outline-primary w-100" do %>
             <i class="fas fa-user"></i> ユーザー詳細を見る
           <% end %>
         </div>
       </div>
-      
+
       <%# 同一ユーザーの他の投稿 %>
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white">

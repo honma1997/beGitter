@@ -6,7 +6,7 @@
         <h1 class="mb-0">投稿管理</h1>
         <span class="badge bg-primary fs-6"><%= @posts.total_count %>件</span>
       </div>
-      
+
       <%# 検索結果情報の表示 %>
       <% if @keyword.present? || @selected_tag_ids.present? || @selected_user_id.present? || @start_date.present? || @end_date.present? %>
         <div class="search-result-info alert alert-info mb-3">
@@ -17,30 +17,30 @@
                 <% if @keyword.present? %>
                   <li>キーワード: <%= @keyword %></li>
                 <% end %>
-                
+
                 <% if @selected_tag_ids.present? %>
                   <% selected_tags = Tag.where(id: @selected_tag_ids) %>
-                  <li>タグ: 
+                  <li>タグ:
                     <% selected_tags.each do |tag| %>
                       <span class="badge bg-secondary"><%= tag.name %></span>
                     <% end %>
                   </li>
                 <% end %>
-                
+
                 <% if @selected_user_id.present? %>
                   <li>投稿者: <%= User.find_by(id: @selected_user_id)&.name || '不明なユーザー' %></li>
                 <% end %>
-                
+
                 <% if @start_date.present? || @end_date.present? %>
-                  <li>期間: 
-                    <%= @start_date&.strftime('%Y/%m/%d') || '指定なし' %> 〜 
+                  <li>期間:
+                    <%= @start_date&.strftime('%Y/%m/%d') || '指定なし' %> 〜
                     <%= @end_date&.strftime('%Y/%m/%d') || '指定なし' %>
                   </li>
                 <% end %>
               </ul>
               <p class="mt-2 mb-0">検索結果: <%= @posts.total_count %>件</p>
             </div>
-            
+
             <div>
               <%= link_to admin_posts_path, class: "btn btn-sm btn-outline-secondary" do %>
                 <i class="fas fa-undo"></i> リセット
@@ -49,7 +49,7 @@
           </div>
         </div>
       <% end %>
-      
+
       <%# 投稿一覧表示部分 %>
       <div class="posts-container">
         <% if @posts.present? %>
@@ -77,20 +77,20 @@
                         <%= post.created_at.strftime('%Y/%m/%d %H:%M') %>
                       </span>
                     </div>
-                    
+
                     <%# 投稿者情報 %>
                     <div class="mb-2">
                       投稿者: <%= link_to post.user.name, admin_user_path(post.user), class: "text-decoration-none" %>
                       <span class="badge bg-info text-white ms-1"><%= post.user.phase_in_japanese %></span>
                     </div>
-                    
+
                     <%# 投稿本文（100文字で切り詰め） %>
                     <div class="card-text mb-2 post-content">
-                      <% # 本文の先頭100文字を表示 %>
+                      <%# 本文の先頭100文字を表示 %>
                       <% content = strip_tags(post.body).truncate(100, separator: ' ', omission: '...') %>
                       <p class="mb-0 text-secondary"><%= content %></p>
                     </div>
-                    
+
                     <%# タグ情報とアクション %>
                     <div class="d-flex justify-content-between align-items-center mt-2">
                       <div class="post-tags">
@@ -98,7 +98,7 @@
                           <span class="badge bg-secondary"><%= tag.name %></span>
                         <% end %>
                       </div>
-                      
+
                       <div class="action-buttons">
                         <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary me-1" do %>
                           <i class="fas fa-eye"></i> 詳細
@@ -108,7 +108,7 @@
                         <% end %>
                       </div>
                     </div>
-                    
+
                     <%# 投稿統計情報 %>
                     <div class="mt-2 text-muted small">
                       <i class="far fa-heart me-1"></i><%= post.likes.count %> いいね
@@ -119,7 +119,7 @@
               </div>
             </div>
           <% end %>
-          
+
             <%# ページネーションの表示 %>
             <div class="pagination-container">
               <div class="pagination-info">
@@ -136,7 +136,7 @@
         <% end %>
       </div>
     </div>
-    
+
     <!-- サイドバー：検索機能 (3列分を使用) -->
     <div class="col-md-3 order-md-1">
       <div class="card sticky-top" style="top: 20px; z-index: 1;">
@@ -150,27 +150,27 @@
               <label class="form-label">キーワード</label>
               <%= f.text_field :keyword, value: @keyword, class: "form-control form-control-sm", placeholder: "タイトル・本文" %>
             </div>
-            
+
             <!-- タグ検索 -->
             <div class="mb-3">
               <label class="form-label">タグ</label>
               <% if @tags.present? %>
-                <%= f.select :tag_ids, 
-                            @tags.map{ |tag| [tag.name, tag.id] }, 
+                <%= f.select :tag_ids,
+                            @tags.map{ |tag| [tag.name, tag.id] },
                             { include_blank: "選択してください", selected: @selected_tag_ids },
                             { class: "form-select form-select-sm" } %>
               <% end %>
             </div>
-            
+
             <!-- ユーザー検索 -->
             <div class="mb-3">
               <label class="form-label">投稿者</label>
-              <%= f.select :user_id, 
-                          @users.map{ |user| [user.name, user.id] }, 
+              <%= f.select :user_id,
+                          @users.map{ |user| [user.name, user.id] },
                           { include_blank: "選択してください", selected: @selected_user_id },
                           { class: "form-select form-select-sm" } %>
             </div>
-            
+
             <!-- 期間検索 -->
             <div class="mb-3">
               <label class="form-label">期間</label>
@@ -180,7 +180,7 @@
                 <%= f.date_field :end_date, value: @end_date, class: "form-control form-control-sm" %>
               </div>
             </div>
-            
+
             <!-- クイック期間 -->
             <div class="mb-3">
               <label class="form-label">クイック期間</label>
@@ -190,7 +190,7 @@
                 <%= link_to "今月", admin_posts_path(keyword: @keyword, tag_ids: @selected_tag_ids, user_id: @selected_user_id, start_date: Date.today.beginning_of_month, end_date: Date.today), class: "btn btn-outline-secondary btn-sm" %>
               </div>
             </div>
-            
+
             <!-- 検索ボタン -->
             <div class="d-grid gap-2">
               <%= f.submit "検索", class: "btn btn-primary btn-sm" %>
