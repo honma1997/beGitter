@@ -1,2 +1,39 @@
-<h1>Public::Tags#index</h1>
-<p>Find me in app/views/public/tags/index.html.erb</p>
+<div class="container my-4">
+  <h1 class="mb-4">タグ一覧</h1>
+  
+  <div class="row">
+    <% if @tags.present? %>
+      <% @tags.each do |tag| %>
+        <div class="col-md-3 mb-3">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title mb-3"><%= tag.name %></h5>
+              <p class="card-text">
+                <span class="badge bg-secondary"><%= tag.posts.count %> 件の投稿</span>
+              </p>
+              <%= link_to "投稿を見る", tag_path(tag), class: "btn btn-outline-primary btn-sm" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-12">
+        <div class="alert alert-info">
+          まだタグが登録されていません。
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- ページネーション -->
+  <% if @tags.present? %>
+    <div class="pagination-container">
+      <div class="pagination-info">
+        <%= "全#{@tags.total_count}件中 #{@tags.offset_value + 1}〜#{@tags.offset_value + @tags.length}件表示" %>
+      </div>
+      <div class="d-flex justify-content-center">
+        <%= paginate @tags %>
+      </div>
+    </div>
+  <% end %>
+</div>

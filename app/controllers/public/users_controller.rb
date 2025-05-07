@@ -2,6 +2,7 @@ class Public::UsersController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_user, only: [:show, :edit, :update]
   before_action :ensure_correct_user, only: [:edit, :update]
+  before_action :check_guest_user, only: [:connect_github]  # GitHub連携にはゲストユーザーチェックを追加
 
   # ユーザー一覧
   def index
@@ -18,6 +19,13 @@ class Public::UsersController < ApplicationController
   def mypage
     @user = current_user
     @posts = @user.posts.order(created_at: :desc).page(params[:page]).per(5)
+  end
+
+  # GitHub連携
+  def connect_github
+    # GitHubにリダイレクトするか、API連携などを行う処理を実装
+    # この例では簡易的な処理を実装
+    redirect_to mypage_path, notice: "GitHubとの連携機能は現在開発中です。"
   end
 
   # ユーザー情報編集
