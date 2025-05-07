@@ -2,11 +2,12 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'dashboard/top'
   end
+  
   # Devise
   devise_for :users
   devise_for :admins, skip: [:registrations], controllers: {
-  sessions: 'admins/sessions'
-}
+    sessions: 'admins/sessions'
+  }
 
   # ルートページ
   root to: "public/homes#top"

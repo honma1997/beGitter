@@ -2,7 +2,7 @@ class Public::UsersController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_user, only: [:show, :edit, :update]
   before_action :ensure_correct_user, only: [:edit, :update]
-  before_action :check_guest_user, only: [:connect_github]  # GitHub連携にはゲストユーザーチェックを追加
+  before_action :check_guest_user, only: [:connect_github]
 
   # ユーザー一覧
   def index
@@ -95,5 +95,4 @@ class Public::UsersController < ApplicationController
       redirect_to mypage_path, alert: "ゲストユーザーはプロフィール編集と退会ができません。"
     end
   end
-  
 end

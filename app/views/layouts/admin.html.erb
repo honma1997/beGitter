@@ -76,7 +76,8 @@
         
         if (startDateField && endDateField) {
           startDateField.addEventListener('change', function() {
-            if (startDateField.value && (!endDateField.value || new Date(endDateField.value) < new Date(startDateField.value))) {
+            if (startDateField.value && 
+               (!endDateField.value || new Date(endDateField.value) < new Date(startDateField.value))) {
               endDateField.value = startDateField.value;
             }
           });
