@@ -1,5 +1,6 @@
 class Public::RelationshipsController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_guest_user  # ゲストユーザーチェック追加
 
   # フォロー作成アクション
   def create

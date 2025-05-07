@@ -2,6 +2,7 @@ class Public::PostsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show, :search]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :ensure_correct_user, only: [:edit, :update, :destroy]
+  before_action :check_guest_user, only: [:new, :create, :edit, :update, :destroy]  # ゲストユーザーチェック追加
   
   # 投稿一覧
   def index

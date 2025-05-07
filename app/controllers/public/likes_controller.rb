@@ -1,5 +1,6 @@
 class Public::LikesController < ApplicationController
   before_action :authenticate_user!
+  before_action :check_guest_user  # ゲストユーザーチェック追加
   
   def create
     @post = Post.find(params[:post_id])
