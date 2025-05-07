@@ -5,7 +5,8 @@ document.addEventListener('turbolinks:load', function() {
   
   if (startDateField && endDateField) {
     startDateField.addEventListener('change', function() {
-      if (startDateField.value && (!endDateField.value || new Date(endDateField.value) < new Date(startDateField.value))) {
+      if (startDateField.value && 
+         (!endDateField.value || new Date(endDateField.value) < new Date(startDateField.value))) {
         endDateField.value = startDateField.value;
       }
     });
@@ -14,7 +15,8 @@ document.addEventListener('turbolinks:load', function() {
   // サイドバーの位置を調整（オプション）
   const stickyTop = document.querySelector('.sticky-top');
   if (stickyTop) {
-    const headerHeight = document.querySelector('header') ? document.querySelector('header').offsetHeight : 0;
+    const headerHeight = document.querySelector('header') ? 
+                         document.querySelector('header').offsetHeight : 0;
     stickyTop.style.top = (headerHeight + 20) + 'px';
   }
 });

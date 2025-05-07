@@ -89,5 +89,4 @@ class User < ApplicationRecord
   validates :github_username, length: { maximum: 39 }, allow_blank: true
   # GitHubユーザー名は英数字、ハイフンのみ許可
   validates :github_username, format: { with: /\A[a-zA-Z0-9-]+\z/, message: "は英数字とハイフンのみ使用できます" }, allow_blank: true
-
 end
