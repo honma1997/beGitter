@@ -3,11 +3,11 @@
     <%= link_to root_path, class: "navbar-brand fw-bold" do %>
       <i class="fas fa-code me-2"></i>beGitter
     <% end %>
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <%# ヘッダー検索フォーム - デスクトップのみ表示 %>
       <div class="navbar-search d-none d-lg-block me-auto">
@@ -16,7 +16,7 @@
           <%= f.submit "検索", class: "btn btn-sm btn-outline-primary" %>
         <% end %>
       </div>
-      
+
       <ul class="navbar-nav ms-auto">
         <% if user_signed_in? %>
           <li class="nav-item">
@@ -24,45 +24,45 @@
               <i class="fas fa-user me-1"></i> マイページ
             <% end %>
           </li>
-          
+
           <li class="nav-item">
             <%= link_to posts_path, class: "nav-link #{current_page?(posts_path) ? 'active fw-bold' : ''}" do %>
               <i class="fas fa-list-alt me-1"></i> 投稿一覧
             <% end %>
           </li>
-          
+
           <li class="nav-item">
             <%= link_to users_path, class: "nav-link #{current_page?(users_path) ? 'active fw-bold' : ''}" do %>
               <i class="fas fa-users me-1"></i> ユーザー一覧
             <% end %>
           </li>
-          
+
           <li class="nav-item">
             <%= link_to new_post_path, class: "nav-link #{current_page?(new_post_path) ? 'active fw-bold' : ''}" do %>
               <i class="fas fa-plus-circle me-1"></i> 新規投稿
             <% end %>
           </li>
-          
+
           <li class="nav-item ms-lg-2">
             <%= button_to destroy_user_session_path, method: :delete, class: "btn btn-outline-danger btn-sm mt-1", form: { data: { turbo: false } } do %>
               <i class="fas fa-sign-out-alt"></i> ログアウト
             <% end %>
           </li>
-          
+
         <% else %>
-        
+
           <li class="nav-item">
             <%= link_to new_user_registration_path, class: "btn btn-outline-primary btn-sm mt-1" do %>
               <i class="fas fa-user-plus me-1"></i> 新規登録
             <% end %>
           </li>
-          
+
           <li class="nav-item ms-lg-2">
             <%= link_to new_user_session_path, class: "btn btn-outline-primary btn-sm mt-1" do %>
               <i class="fas fa-sign-in-alt me-1"></i> ログイン
             <% end %>
           </li>
-          
+
           <!-- ゲストログインボタンを追加 -->
           <li class="nav-item ms-lg-2">
             <%= button_to guest_sign_in_path, method: :post, class: "btn btn-outline-success btn-sm mt-1", form: { data: { turbo: false } } do %>

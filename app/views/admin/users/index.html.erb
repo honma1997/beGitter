@@ -13,8 +13,8 @@
           <%= f.text_field :keyword, value: params[:keyword], class: "form-control", placeholder: "ユーザー名・メールアドレスで検索" %>
         </div>
         <div class="col-md-4">
-          <%= f.select :phase, 
-                     [["すべて", ""], ["基礎学習中", "basic_learning"], ["個人開発中", "personal_dev"], ["就職活動中", "job_hunting"]], 
+          <%= f.select :phase,
+                     [["すべて", ""], ["基礎学習中", "basic_learning"], ["個人開発中", "personal_dev"], ["就職活動中", "job_hunting"]],
                      { selected: params[:phase] },
                      { class: "form-select" } %>
         </div>
@@ -64,7 +64,7 @@
             </tbody>
           </table>
         </div>
-        
+
           <%# ページネーションの表示 %>
           <div class="pagination-container">
             <div class="pagination-info">

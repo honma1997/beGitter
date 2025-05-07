@@ -14,13 +14,13 @@
               </div>
             <% end %>
           </div>
-          
+
           <!-- ユーザー名 -->
           <h3 class="card-title"><%= @user.name %></h3>
-          
+
           <!-- 学習フェーズ -->
           <p class="badge bg-info text-white mb-3"><%= @user.phase_in_japanese %></p>
-          
+
           <!-- 投稿数・フォロー・フォロワー -->
           <div class="row text-center mb-4">
             <div class="col-4">
@@ -42,7 +42,7 @@
               <% end %>
             </div>
           </div>
-          
+
           <% if user_signed_in? && current_user == @user && !current_user.github_username.present? %>
             <% if !current_user.guest? %>
               <%= link_to connect_github_path, class: "btn btn-outline-dark w-100 mb-2" do %>
@@ -54,10 +54,10 @@
               </div>
             <% end %>
           <% end %>
-          
+
           <!-- 登録日 -->
           <p class="text-muted small">登録日: <%= @user.created_at.strftime('%Y/%m/%d') %></p>
-          
+
           <!-- フォローボタン（自分以外のユーザーの場合のみ表示） -->
           <% if user_signed_in? && current_user != @user %>
             <% if current_user.guest? %>
@@ -101,7 +101,7 @@
                     <span class="ms-2"><i class="far fa-comment"></i> <%= post.comments.count %></span>
                   </p>
                   <p class="card-text"><%= truncate(post.body, length: 100) %></p>
-                  
+
                   <!-- タグ表示を省略または簡素化 -->
                   <% if post.tags.present? %>
                     <div class="post-tags mb-2">
@@ -113,7 +113,7 @@
                       <% end %>
                     </div>
                   <% end %>
-                  
+
                   <%= link_to "詳細を見る", post_path(post), class: "btn btn-sm btn-outline-primary" %>
                 </div>
               </div>

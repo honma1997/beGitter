@@ -8,7 +8,7 @@
         プログラミング学習の道のりを共有し、互いに励まし合えるコミュニティです。<br>
         あなたの学びの進捗を記録して、同じ道を歩む仲間と繋がりましょう。
       </p>
-      
+
       <% if user_signed_in? %>
         <%= link_to posts_path, class: "btn btn-primary btn-lg mt-3" do %>
           <i class="fas fa-list-alt me-2"></i> 投稿一覧を見る
@@ -18,7 +18,7 @@
           <%= link_to new_user_registration_path, class: "btn btn-outline-primary btn-lg me-3" do %>
             <i class="fas fa-user-plus me-2"></i> 新規登録
           <% end %>
-          
+
           <%= link_to new_user_session_path, class: "btn btn-outline-primary btn-lg" do %>
             <i class="fas fa-sign-in-alt me-2"></i> ログイン
           <% end %>
@@ -26,7 +26,7 @@
       <% end %>
     </div>
   </div>
-  
+
   <div class="row mb-5">
     <div class="col-md-6">
       <div class="card shadow-sm border-0 h-100">
@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-6 mt-4 mt-md-0">
       <div class="card shadow-sm border-0 h-100">
         <div class="card-header bg-white">
@@ -98,13 +98,13 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-md-10 mx-auto">
       <div class="card shadow-sm border-0">
         <div class="card-body p-4">
           <h3 class="h4 mb-4 text-center">beGitterの特徴</h3>
-          
+
           <div class="row g-4">
             <div class="col-md-4">
               <div class="text-center mb-3">
@@ -113,7 +113,7 @@
               <h4 class="h5 text-center">学びを記録</h4>
               <p class="text-muted">日々の学習内容や成果を投稿して、自分の成長を可視化できます。</p>
             </div>
-            
+
             <div class="col-md-4">
               <div class="text-center mb-3">
                 <i class="fas fa-users fa-3x text-success"></i>
@@ -121,7 +121,7 @@
               <h4 class="h5 text-center">仲間と繋がる</h4>
               <p class="text-muted">同じフェーズの学習者をフォローして、モチベーションを高め合いましょう。</p>
             </div>
-            
+
             <div class="col-md-4">
               <div class="text-center mb-3">
                 <i class="fas fa-lightbulb fa-3x text-warning"></i>

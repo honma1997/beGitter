@@ -1,12 +1,12 @@
 <div class="container my-4">
   <h1 class="mb-4"><%= @user.name %>さんのフォロワー一覧</h1>
-  
+
   <div class="mb-3">
     <%= link_to user_path(@user), class: "btn btn-outline-secondary" do %>
       <i class="fas fa-arrow-left"></i> プロフィールに戻る
     <% end %>
   </div>
-  
+
   <% if @users.present? %>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <% @users.each do |user| %>
@@ -23,13 +23,13 @@
                   </div>
                 <% end %>
               </div>
-              
+
               <%# ユーザー名 %>
               <h5 class="card-title"><%= user.name %></h5>
-              
+
               <%# 学習フェーズ %>
               <p class="badge bg-info text-white mb-3"><%= user.phase_in_japanese %></p>
-              
+
               <%# 投稿数・フォロワー数 %>
               <div class="d-flex justify-content-center gap-3 mb-3">
                 <div class="text-center">
@@ -41,7 +41,7 @@
                   <small class="text-muted">フォロワー</small>
                 </div>
               </div>
-              
+
               <%# フォローボタン（自分以外のユーザーの場合のみ表示） %>
               <% if user_signed_in? && current_user != user %>
                 <% if current_user.following?(user) %>
@@ -54,7 +54,7 @@
                   <% end %>
                 <% end %>
               <% end %>
-              
+
               <%# プロフィール詳細へのリンク %>
               <%= link_to "プロフィールを見る", user_path(user), class: "btn btn-outline-primary btn-sm w-100" %>
             </div>
@@ -62,7 +62,7 @@
         </div>
       <% end %>
     </div>
-    
+
     <%# ページネーション %>
     <div class="d-flex justify-content-center mt-4">
       <%= paginate @users %>

@@ -25,7 +25,7 @@
                 </ul>
               </div>
             <% end %>
-            
+
             <div class="mb-3">
               <%= f.label :name, "ユーザー名", class: "form-label" %>
               <%= f.text_field :name, class: "form-control", disabled: current_user.guest? %>
@@ -33,7 +33,7 @@
                 <div class="form-text text-danger">ゲストユーザーは編集できません</div>
               <% end %>
             </div>
-            
+
             <div class="mb-3">
               <%= f.label :email, "メールアドレス", class: "form-label" %>
               <%= f.email_field :email, class: "form-control", disabled: current_user.guest? %>
@@ -41,7 +41,7 @@
                 <div class="form-text text-danger">ゲストユーザーは編集できません</div>
               <% end %>
             </div>
-            
+
             <div class="mb-3">
               <%= f.label :phase, "学習フェーズ", class: "form-label" %>
               <%= f.select :phase, User.phases_i18n.invert, {}, { class: "form-select", disabled: current_user.guest? } %>
@@ -51,7 +51,7 @@
                 <div class="form-text">あなたの現在の学習段階を選択してください</div>
               <% end %>
             </div>
-            
+
             <div class="mb-3">
             <%= f.label :github_username, "GitHubユーザー名", class: "form-label" %>
             <div class="input-group">
@@ -64,7 +64,7 @@
               <div class="form-text">GitHubアカウントを連携すると、プロフィールにGitHubへのリンクが表示されます</div>
             <% end %>
           </div>
-          
+
             <% if defined?(@user.profile_image) && @user.profile_image.attached? %>
               <div class="mb-3">
                 <label class="form-label">現在のプロフィール画像</label>
@@ -73,7 +73,7 @@
                 </div>
               </div>
             <% end %>
-            
+
             <div class="mb-4">
               <%= f.label :profile_image, "プロフィール画像", class: "form-label" %>
               <%= f.file_field :profile_image, class: "form-control", accept: "image/*", disabled: current_user.guest? %>
@@ -81,7 +81,7 @@
                 <div class="form-text text-danger">ゲストユーザーは編集できません</div>
               <% end %>
             </div>
-            
+
             <div class="d-grid gap-2">
               <%= f.submit "更新する", class: "btn btn-primary", disabled: current_user.guest? %>
               <%= link_to "キャンセル", mypage_path, class: "btn btn-outline-secondary" %>
@@ -91,7 +91,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row justify-content-center mt-5">
     <div class="col-md-8">
       <div class="card border-0 shadow-sm">
@@ -101,8 +101,8 @@
         <div class="card-body">
           <p class="text-danger">アカウントを削除すると、すべての投稿やコメント、いいねなどのデータが完全に削除されます。この操作は取り消せません。</p>
           <p>退会する場合は以下のボタンを押してください。</p>
-          <%= button_to "退会する", user_path(@user), method: :delete, 
-                data: { confirm: "本当に退会しますか？すべてのデータが削除され、この操作は取り消せません。" }, 
+          <%= button_to "退会する", user_path(@user), method: :delete,
+                data: { confirm: "本当に退会しますか？すべてのデータが削除され、この操作は取り消せません。" },
                 class: "btn btn-danger", disabled: current_user.guest? %>
           <% if current_user.guest? %>
             <div class="form-text text-danger mt-2">ゲストユーザーは退会できません</div>
