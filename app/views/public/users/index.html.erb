@@ -58,11 +58,18 @@
       <% end %>
     </div>
     
-    <%# ページネーション %>
-    <div class="d-flex justify-content-center mt-4">
-      <%= paginate @users %>
+  <%# ページネーションの表示 %>
+  <% if @users.present? && @users.total_count > 0 %>
+    <div class="pagination-container">
+      <div class="pagination-info">
+        <%= "全#{@users.total_count}件中 #{@users.offset_value + 1}〜#{@users.offset_value + @users.length}件表示" %>
+      </div>
+      <div class="d-flex justify-content-center">
+        <%= paginate @users %>
+      </div>
     </div>
-  <% else %>
+  <% end %>
+<% else %>
     <div class="alert alert-info">
       ユーザーが見つかりませんでした。
     </div>

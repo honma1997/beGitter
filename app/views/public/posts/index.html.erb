@@ -1,4 +1,3 @@
-<%# 投稿一覧ページ %>
 <div class="container">
   <div class="row">
     <!-- メインコンテンツ：投稿一覧 (9列分を使用) -->
@@ -6,12 +5,28 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">投稿一覧</h1>
         <% if user_signed_in? %>
-          <%= link_to new_post_path, class: "btn btn-primary" do %>
-            <i class="fas fa-plus-circle me-1"></i> 新規投稿
+          <% if current_user.guest? %>
+            <div class="d-flex align-items-center">
+              <span class="badge bg-warning text-dark me-2">ゲストユーザー制限</span>
+              <%= link_to new_user_registration_path, class: "btn btn-sm btn-outline-primary" do %>
+                <i class="fas fa-user-plus me-1"></i> 新規登録して投稿
+              <% end %>
+            </div>
+          <% else %>
+            <%= link_to new_post_path, class: "btn btn-primary" do %>
+              <i class="fas fa-plus-circle me-1"></i> 新規投稿
+            <% end %>
           <% end %>
         <% end %>
       </div>
-      
+
+      <% if user_signed_in? && current_user.guest? %>
+        <div class="alert alert-info mb-4">
+          <h5><i class="fas fa-info-circle"></i> ゲストユーザーの制限について</h5>
+          <p class="mb-0">ゲストユーザーは閲覧のみ可能です。投稿、コメント、いいね、フォローなどの機能を使用するには、<%= link_to "新規登録", new_user_registration_path, class: "alert-link" %>をお願いします。</p>
+        </div>
+      <% end %>      
+
       <%# 検索結果情報の表示 %>
       <% if @keyword.present? || @selected_tag_ids.present? || @selected_user_id.present? || @start_date.present? || @end_date.present? %>
         <div class="search-result-info alert alert-info mb-3">
@@ -54,7 +69,7 @@
           </div>
         </div>
       <% end %>
-      
+
       <%# 投稿一覧表示部分 %>
       <div class="posts-container">
         <% if @posts.present? %>
@@ -62,73 +77,74 @@
           <% @posts.each do |post| %>
             <div class="card mb-3">
               <div class="card-body">
-                <%# 投稿タイトル（詳細へのリンク） %>
-                <h5 class="card-title"><%= link_to post.title, post_path(post) %></h5>
-                
-                <%# 投稿者情報 %>
-                <h6 class="card-subtitle mb-2 text-muted">
-                  <%= post.user.name %> さん
-                  <span class="ms-2 badge bg-info text-white"><%= post.user.phase_in_japanese %></span>
-                </h6>
-                
-                <%# 投稿本文（100文字で切り詰め） %>
-                <p class="card-text"><%= truncate(post.body, length: 100) %></p>
-                
-                <%# タグ一覧 %>
-                <div class="post-tags mb-2">
-                  <% post.tags.each do |tag| %>
-                    <span class="badge bg-secondary"><%= tag.name %></span>
-                  <% end %>
-                </div>
-
-                <%# 投稿画像（存在する場合のみ表示） %>
-                <% if post.image.attached? %>
-                  <div class="post-image mb-4">
-                    <%= image_tag post.image, class: "img-fluid rounded", style: "max-width: 30%;" %>
-                  </div>
-                <% end %>
-                
-                <%# いいねとコメント数の表示 %>
-                <div class="d-flex gap-2 mt-2 mb-2">
-                  <% if user_signed_in? %>
-                    <% if post.liked_by?(current_user) %>
-                      <%= button_to post_like_path(post), method: :delete, class: "btn btn-sm btn-danger" do %>
-                        <i class="fas fa-heart"></i> <%= post.likes.count %>
-                      <% end %>
-                    <% else %>
-                      <%= button_to post_like_path(post), method: :post, class: "btn btn-sm btn-outline-danger" do %>
-                        <i class="far fa-heart"></i> <%= post.likes.count %>
-                      <% end %>
-                    <% end %>
+                <div class="row">
+                  <%# 投稿画像があれば左側に表示（小さめのサムネイル） %>
+                  <% if post.image.attached? %>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                      <%= image_tag post.image, class: "img-fluid rounded post-thumbnail", style: "width: 100%; height: 140px; object-fit: cover;" %>
+                    </div>
+                    <div class="col-md-9">
                   <% else %>
-                    <span class="badge bg-secondary">
-                      <i class="far fa-heart"></i> <%= post.likes.count %>
-                    </span>
+                    <div class="col-12">
                   <% end %>
-                  
-                  <span class="badge bg-secondary">
-                    <i class="far fa-comment"></i> <%= post.comments.count %>
-                  </span>
-                </div>
-                
-                <%# 投稿日時 %>
-                <div class="card-text mt-2">
-                  <small class="text-muted">投稿日: <%= post.created_at.strftime('%Y/%m/%d %H:%M') %></small>
-                  <small class="text-muted">編集日: <%= post.updated_at.strftime('%Y/%m/%d %H:%M') %></small>
+                    <%# 投稿タイトル（詳細へのリンク） %>
+                    <h5 class="card-title mb-2">
+                      <%= link_to post.title, post_path(post), class: "text-decoration-none" %>
+                    </h5>
+                    
+                    <%# 投稿者情報 %>
+                    <div class="d-flex align-items-center mb-2">
+                      <% if post.user.profile_image.attached? %>
+                        <%= image_tag post.user.profile_image, class: "rounded-circle me-2", style: "width: 30px; height: 30px; object-fit: cover;" %>
+                      <% else %>
+                        <div class="bg-light rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 30px; height: 30px;">
+                          <i class="fas fa-user text-secondary"></i>
+                        </div>
+                      <% end %>
+                      <span><%= post.user.name %> さん</span>
+                      <span class="ms-2 badge bg-info text-white"><%= post.user.phase_in_japanese %></span>
+                    </div>
+                    
+                    <%# 投稿本文（見やすくするため段落を適切に表示、100文字で切り詰め） %>
+                    <div class="card-text mb-3 post-content">
+                      <% # 本文の先頭150文字を表示し、改行を保持する %>
+                      <% truncated_content = strip_tags(post.body).truncate(150, separator: ' ', omission: '...') %>
+                      <% paragraphs = truncated_content.split("\n").reject(&:blank?) %>
+                      <% paragraphs.each do |paragraph| %>
+                        <p class="mb-1 text-secondary"><%= paragraph %></p>
+                      <% end %>
+                    </div>
+                    
+                    <%# タグ一覧 %>
+                    <div class="post-tags mb-2">
+                      <% post.tags.each do |tag| %>
+                        <span class="badge bg-secondary"><%= tag.name %></span>
+                      <% end %>
+                    </div>
+
+                    <%# 投稿日時とアクション %>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                      <div class="text-muted small">
+                        <i class="far fa-calendar-alt me-1"></i><%= post.created_at.strftime('%Y/%m/%d %H:%M') %>
+                        <span class="ms-2"><i class="far fa-heart me-1"></i><%= post.likes.count %></span>
+                        <span class="ms-2"><i class="far fa-comment me-1"></i><%= post.comments.count %></span>
+                      </div>
+                      <%= link_to "詳細を見る", post_path(post), class: "btn btn-sm btn-outline-primary" %>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           <% end %>
           
           <%# ページネーションの表示 %>
-          <div class="pagination-container d-flex justify-content-center">
-            <%= paginate @posts, params: {
-              keyword: @keyword,
-              tag_ids: @selected_tag_ids,
-              user_id: @selected_user_id,
-              start_date: @start_date,
-              end_date: @end_date
-            } %>
+          <div class="pagination-container">
+            <div class="pagination-info">
+              <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+            </div>
+            <div class="d-flex justify-content-center">
+              <%= paginate @posts %>
+            </div>
           </div>
         <% else %>
           <%# 投稿がない場合のメッセージ %>

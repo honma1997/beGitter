@@ -65,11 +65,16 @@
           </table>
         </div>
         
-        <%# ページネーション %>
-        <div class="d-flex justify-content-center py-3">
-          <%= paginate @users %>
-        </div>
-      <% else %>
+          <%# ページネーションの表示 %>
+          <div class="pagination-container">
+            <div class="pagination-info">
+              <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+            </div>
+            <div class="d-flex justify-content-center">
+              <%= paginate @posts %>
+            </div>
+          </div>
+        <% else %>
         <div class="p-4 text-center">
           <p class="mb-0">ユーザーが見つかりませんでした。検索条件を変更してください。</p>
         </div>

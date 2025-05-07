@@ -12,6 +12,13 @@ class ApplicationController < ActionController::Base
 
   # MarkdownHelperを全コントローラーで使えるようにする
   helper :all
+
+  # ゲストユーザー用の共通チェックメソッド
+  def check_guest_user
+    if user_signed_in? && current_user.guest?
+      redirect_to request.referer || root_path, alert: "ゲストユーザーはこの機能を使用できません。実際に使用するには新規登録をお願いします。"
+    end
+  end
   
   protected
   

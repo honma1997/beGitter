@@ -50,68 +50,90 @@
         </div>
       <% end %>
       
-      <%# 投稿一覧テーブル %>
-      <div class="card">
-        <div class="card-body p-0">
-          <% if @posts.present? %>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover mb-0">
-                <thead class="table-light">
-                  <tr>
-                    <th>ID</th>
-                    <th>タイトル</th>
-                    <th>投稿者</th>
-                    <th>タグ</th>
-                    <th>投稿日時</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @posts.each do |post| %>
-                    <tr>
-                      <td><%= post.id %></td>
-                      <td>
-                        <%= link_to truncate(post.title, length: 30), admin_post_path(post) %>
-                      </td>
-                      <td>
-                        <%= link_to post.user.name, admin_user_path(post.user) %>
-                      </td>
-                      <td>
+      <%# 投稿一覧表示部分 %>
+      <div class="posts-container">
+        <% if @posts.present? %>
+          <%# 投稿がある場合、カード形式で表示 %>
+          <% @posts.each do |post| %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="row">
+                  <%# 投稿画像があれば左側に表示（小さめのサムネイル） %>
+                  <% if post.image.attached? %>
+                    <div class="col-md-2 mb-3 mb-md-0">
+                      <%= image_tag post.image, class: "img-fluid rounded", style: "width: 100%; height: 80px; object-fit: cover;" %>
+                    </div>
+                    <div class="col-md-10">
+                  <% else %>
+                    <div class="col-12">
+                  <% end %>
+                    <%# 投稿タイトル・ID・投稿者情報 %>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h5 class="card-title mb-0">
+                        <%= link_to post.title, admin_post_path(post), class: "text-decoration-none" %>
+                        <small class="text-muted ms-2">#<%= post.id %></small>
+                      </h5>
+                      <span class="badge bg-light text-dark border">
+                        <%= post.created_at.strftime('%Y/%m/%d %H:%M') %>
+                      </span>
+                    </div>
+                    
+                    <%# 投稿者情報 %>
+                    <div class="mb-2">
+                      投稿者: <%= link_to post.user.name, admin_user_path(post.user), class: "text-decoration-none" %>
+                      <span class="badge bg-info text-white ms-1"><%= post.user.phase_in_japanese %></span>
+                    </div>
+                    
+                    <%# 投稿本文（100文字で切り詰め） %>
+                    <div class="card-text mb-2 post-content">
+                      <% # 本文の先頭100文字を表示 %>
+                      <% content = strip_tags(post.body).truncate(100, separator: ' ', omission: '...') %>
+                      <p class="mb-0 text-secondary"><%= content %></p>
+                    </div>
+                    
+                    <%# タグ情報とアクション %>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                      <div class="post-tags">
                         <% post.tags.each do |tag| %>
                           <span class="badge bg-secondary"><%= tag.name %></span>
                         <% end %>
-                      </td>
-                      <td><%= post.created_at.strftime('%Y/%m/%d %H:%M') %></td>
-                      <td>
-                        <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary" do %>
+                      </div>
+                      
+                      <div class="action-buttons">
+                        <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary me-1" do %>
                           <i class="fas fa-eye"></i> 詳細
                         <% end %>
                         <%= link_to admin_post_path(post), method: :delete, data: { confirm: "この投稿を削除しますか？", turbo: false }, class: "btn btn-sm btn-outline-danger" do %>
                           <i class="fas fa-trash"></i> 削除
                         <% end %>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-            
-            <%# ページネーション %>
-            <div class="d-flex justify-content-center py-3">
-              <%= paginate @posts, params: {
-                keyword: @keyword,
-                tag_ids: @selected_tag_ids,
-                user_id: @selected_user_id,
-                start_date: @start_date,
-                end_date: @end_date
-              } %>
-            </div>
-          <% else %>
-            <div class="p-4 text-center">
-              <p class="mb-0">投稿がありません。</p>
+                      </div>
+                    </div>
+                    
+                    <%# 投稿統計情報 %>
+                    <div class="mt-2 text-muted small">
+                      <i class="far fa-heart me-1"></i><%= post.likes.count %> いいね
+                      <i class="far fa-comment me-1 ms-2"></i><%= post.comments.count %> コメント
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           <% end %>
-        </div>
+          
+            <%# ページネーションの表示 %>
+            <div class="pagination-container">
+              <div class="pagination-info">
+                <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+              </div>
+              <div class="d-flex justify-content-center">
+                <%= paginate @posts %>
+              </div>
+            </div>
+          <% else %>
+          <div class="p-4 text-center">
+            <p class="mb-0">投稿がありません。</p>
+          </div>
+        <% end %>
       </div>
     </div>
     
