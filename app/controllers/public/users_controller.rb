@@ -23,9 +23,7 @@ class Public::UsersController < ApplicationController
 
   # GitHub連携
   def connect_github
-    # GitHubにリダイレクトするか、API連携などを行う処理を実装
-    # この例では簡易的な処理を実装
-    redirect_to mypage_path, notice: "GitHubとの連携機能は現在開発中です。"
+    redirect_to edit_user_path(current_user), notice: "GitHubユーザー名はプロフィール編集画面で設定できます。"
   end
 
   # ユーザー情報編集
