@@ -45,15 +45,22 @@
 
           <% if !current_user.github_username.present? %>
             <% if !current_user.guest? %>
-              <%= link_to connect_github_path, class: "btn btn-outline-dark w-100 mb-2" do %>
-                <i class="fab fa-github"></i> GitHubと連携する
+              <%= link_to edit_user_path(current_user), class: "btn btn-outline-dark w-100 mb-2" do %>
+                <i class="fab fa-github"></i> GitHubユーザー名を設定する
               <% end %>
             <% else %>
               <div class="alert alert-warning p-2 mb-2">
-                <small class="mb-0">ゲストユーザーはGitHubとの連携ができません</small>
+                <small class="mb-0">ゲストユーザーはGitHubのユーザー名を設定できません</small>
               </div>
             <% end %>
+          <% else %>
+            <div class="mb-3">
+              <a href="https://github.com/<%= current_user.github_username %>" target="_blank" class="btn btn-outline-dark w-100">
+                <i class="fab fa-github me-1"></i> GitHub: <%= current_user.github_username %>
+              </a>
+            </div>
           <% end %>
+          
           <!-- 登録日 -->
           <p class="text-muted small">登録日: <%= @user.created_at.strftime('%Y/%m/%d') %></p>
 
