@@ -5,21 +5,29 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/setup-node@v3
-    - name: Deploy 
+    - name: Set up SSH
       env:
         PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key
+        chmod 600 private_key
+
+    - name: Deploy to EC2
+      env:
         USER_NAME: ${{ secrets.USER_NAME }}
         HOST_NAME: ${{ secrets.HOST_NAME }}
       run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} 'cd beGitter &&
-        git pull origin main &&
-        ~/.rbenv/shims/bundle install &&
-        ~/.rbenv/shims/bundle exec rails assets:precompile RAILS_ENV=production &&
-        ~/.rbenv/shims/bundle exec rails db:migrate RAILS_ENV=production &&
-        if [[ -e tmp/pids/puma.pid ]];then sudo kill $(cat tmp/pids/puma.pid); echo kill puma process;fi &&
-        ~/.rbenv/shims/rails s -e production'
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} << 'EOF'
+          cd beGitter
+          git pull origin main
+          ~/.rbenv/shims/bundle install
+          ~/.rbenv/shims/bundle exec rails assets:precompile RAILS_ENV=production
+          ~/.rbenv/shims/bundle exec rails db:migrate RAILS_ENV=production
+
+          # Pumaを再起動（systemd で管理してるなら）
+          sudo systemctl restart puma
+        EOF
