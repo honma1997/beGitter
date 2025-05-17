@@ -27,29 +27,9 @@
 
     <%# いいねボタン %>
     <div class="like-button mb-3">
-      <% if user_signed_in? && !current_user.guest? %>
-        <% if @post.liked_by?(current_user) %>
-          <%= button_to post_like_path(@post), method: :delete, class: "btn btn-outline-danger" do %>
-            <i class="fas fa-heart"></i> いいね解除 (<%= @post.likes.count %>)
-          <% end %>
-        <% else %>
-          <%= button_to post_like_path(@post), method: :post, class: "btn btn-outline-danger" do %>
-            <i class="far fa-heart"></i> いいね (<%= @post.likes.count %>)
-          <% end %>
-        <% end %>
-      <% elsif user_signed_in? && current_user.guest? %>
-        <button class="btn btn-outline-secondary" disabled>
-          <i class="far fa-heart"></i> いいね (<%= @post.likes.count %>)
-          <small class="ms-2">(ゲストは制限されています)</small>
-        </button>
-      <% else %>
-        <button class="btn btn-outline-secondary" disabled>
-          <i class="far fa-heart"></i> いいね (<%= @post.likes.count %>)
-          <small class="ms-2">(ログインしてください)</small>
-        </button>
-      <% end %>
+      <%= render 'public/likes/like', post: @post %>
     </div>
-
+    
     <%# 投稿者本人の場合のみ編集/削除ボタンを表示 %>
     <% if @post.user == current_user %>
       <div class="post-actions mb-3">
@@ -91,59 +71,28 @@
       </div>
     </div>
 
-    <%# コメント欄の追加 %>
-    <div class="post-comments mb-4">
-      <h5>コメント（<%= @post.comments.count %>件）</h5>
+      <%# コメント欄の追加 %>
+      <div class="post-comments mb-4">
+        <h5>コメント（<%= @post.comments.count %>件）</h5>
 
-      <%# コメント一覧 %>
-      <div class="comment-list mb-3">
-        <% if @post.comments.present? %>
-          <% @post.comments.order(created_at: :desc).each do |comment| %>
-            <div class="card mb-2">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">
-                  <%= link_to comment.user.name, user_path(comment.user) %> -
-                  <small><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
+        <%# コメント一覧 %>
+        <div class="comment-list mb-3">
+          <%= render 'public/comments/index', comments: @post.comments, post: @post %>
+        </div>
 
-                  <%# コメント投稿者本人の場合のみ削除ボタンを表示 %>
-                  <% if comment.user == current_user %>
-                    <%= button_to post_comment_path(@post, comment), method: :delete,
-                        class: "btn btn-sm btn-outline-danger float-end",
-                        data: { confirm: "このコメントを削除しますか？" } do %>
-                      <i class="fas fa-trash-alt"></i>
-                    <% end %>
-                  <% end %>
-                </h6>
-                <p class="card-text"><%= comment.body %></p>
-              </div>
-            </div>
-          <% end %>
+        <%# コメント投稿フォーム（ログイン中かつゲストユーザーでない場合のみ表示） %>
+        <% if user_signed_in? && !current_user.guest? %>
+          <%= render 'public/comments/form', post: @post, comment: @comment %>
+        <% elsif user_signed_in? && current_user.guest? %>
+          <div class="alert alert-warning mb-4">
+            <p class="mb-0">ゲストユーザーはコメントできません。コメントするには<%= link_to "新規登録", new_user_registration_path, class: "alert-link" %>をお願いします。</p>
+          </div>
         <% else %>
-          <p class="text-muted">まだコメントはありません。</p>
+          <div class="alert alert-info mb-4">
+            コメントを投稿するには<%= link_to "ログイン", new_user_session_path, class: "alert-link" %>が必要です。
+          </div>
         <% end %>
       </div>
-
-      <%# コメント投稿フォーム（ログイン中かつゲストユーザーでない場合のみ表示） %>
-      <% if user_signed_in? && !current_user.guest? %>
-        <div class="comment-form mb-4">
-          <%= form_with model: [@post, @comment], local: true do |f| %>
-            <div class="form-group">
-              <%= f.text_area :body, rows: 3, class: "form-control", placeholder: "コメントを入力してください" %>
-            </div>
-            <div class="mt-2">
-              <%= f.submit "コメントする", class: "btn btn-primary" %>
-            </div>
-          <% end %>
-        </div>
-      <% elsif user_signed_in? && current_user.guest? %>
-        <div class="alert alert-warning mb-4">
-          <p class="mb-0">ゲストユーザーはコメントできません。コメントするには<%= link_to "新規登録", new_user_registration_path, class: "alert-link" %>をお願いします。</p>
-        </div>
-      <% else %>
-        <div class="alert alert-info mb-4">
-          コメントを投稿するには<%= link_to "ログイン", new_user_session_path, class: "alert-link" %>が必要です。
-        </div>
-      <% end %>
     </div>
   </div>
 </div>

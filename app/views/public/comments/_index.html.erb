@@ -1,0 +1,9 @@
+<div id="comments-list">
+  <% if comments.present? %>
+    <% comments.order(created_at: :desc).each do |comment| %>
+      <%= render 'public/comments/comment', comment: comment, post: post %>
+    <% end %>
+  <% else %>
+    <p class="text-muted">まだコメントはありません。</p>
+  <% end %>
+</div>

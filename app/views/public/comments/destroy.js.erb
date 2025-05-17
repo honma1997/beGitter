@@ -1,0 +1,10 @@
+// コメント一覧から削除されたコメントを削除
+document.getElementById("comment-<%= @comment.id %>").remove();
+
+// コメントがなくなった場合のメッセージ表示
+<% if @post.comments.empty? %>
+  document.getElementById("comments-list").innerHTML = '<p class="text-muted">まだコメントはありません。</p>';
+<% end %>
+
+// フラッシュメッセージを表示（オプション）
+// カスタムフラッシュメッセージ機能を実装する場合はここに追加

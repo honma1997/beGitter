@@ -1,0 +1,8 @@
+// コメント一覧を更新
+document.getElementById("comments-list").innerHTML = '<%= j(render "public/comments/index", comments: @post.comments, post: @post) %>';
+
+// コメント入力フォームをリセット
+document.getElementById("comment_body").value = '';
+
+// フラッシュメッセージを表示（オプション）
+// カスタムフラッシュメッセージ機能を実装する場合はここに追加

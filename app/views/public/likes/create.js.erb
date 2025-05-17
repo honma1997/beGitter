@@ -1,0 +1,2 @@
+// いいねボタンの表示を更新
+document.getElementById("like-button-<%= @post.id %>").innerHTML = '<%= j(render "public/likes/like", post: @post) %>';

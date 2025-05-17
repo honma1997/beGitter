@@ -1,26 +1,31 @@
 class Public::LikesController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_guest_user  # ゲストユーザーチェック追加
+  before_action :check_guest_user
+  before_action :set_post
   
   def create
-    @post = Post.find(params[:post_id])
-    like = current_user.likes.new(post_id: @post.id)
-    
-    if like.save
-      redirect_to request.referer, notice: "投稿にいいねしました"
-    else
-      redirect_to request.referer, alert: "いいねできませんでした"
+    @like = current_user.likes.new(post_id: @post.id)
+    @like.save
+    # リダイレクトではなく、JavaScriptレスポンスを返す
+    respond_to do |format|
+      format.html { redirect_to request.referer }
+      format.js   # create.js.erbを探す
     end
   end
 
   def destroy
-    @post = Post.find(params[:post_id])
-    like = current_user.likes.find_by(post_id: @post.id)
-    
-    if like.destroy
-      redirect_to request.referer, notice: "いいねを取り消しました"
-    else
-      redirect_to request.referer, alert: "いいねの取り消しに失敗しました"
+    @like = current_user.likes.find_by(post_id: @post.id)
+    @like.destroy
+    # リダイレクトではなく、JavaScriptレスポンスを返す
+    respond_to do |format|
+      format.html { redirect_to request.referer }
+      format.js   # destroy.js.erbを探す
     end
+  end
+  
+  private
+  
+  def set_post
+    @post = Post.find(params[:post_id])
   end
 end
