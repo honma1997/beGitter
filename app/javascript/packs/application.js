@@ -4,10 +4,6 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
-// Bootstrap と jQuery をインポート
-import 'bootstrap'
-import 'jquery'
-
 // Rails UJSを明示的に開始
 Rails.start()
 Turbolinks.start()
