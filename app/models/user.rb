@@ -40,7 +40,7 @@ class User < ApplicationRecord
   
   # 学習フェーズの定義（数値で保存されるが、シンボルで扱える）
   # 0: 基礎学習中, 1: 個人開発中, 2: 就職活動中
-  enum phase: { basic_learning: 0, personal_dev: 1, job_hunting: 2 }
+  enum phase: { basic_learning: 0, advanced_learning: 1, personal_dev: 2, job_hunting: 3, employed: 4 }
   
   #=========================================================
   # 追加機能（便利なメソッド）
