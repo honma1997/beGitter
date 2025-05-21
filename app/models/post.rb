@@ -18,7 +18,6 @@ class Post < ApplicationRecord
     likes.exists?(user_id: user.id)
   end
   
-  # 検索メソッド
   def self.search(keyword, tag_ids = nil, user_id = nil, start_date = nil, end_date = nil)
     posts = all
     
@@ -44,11 +43,11 @@ class Post < ApplicationRecord
     
     # 期間での絞り込み
     if start_date.present?
-      posts = posts.where('created_at >= ?', start_date.beginning_of_day)
+      posts = posts.where('posts.created_at >= ?', start_date.beginning_of_day)
     end
     
     if end_date.present?
-      posts = posts.where('created_at <= ?', end_date.end_of_day)
+      posts = posts.where('posts.created_at <= ?', end_date.end_of_day)
     end
     
     posts

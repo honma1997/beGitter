@@ -1,0 +1,53 @@
+<%= form_with url: admin_posts_path, method: :get, local: true do |f| %>
+  <!-- キーワード検索 -->
+  <div class="mb-3">
+    <label class="form-label">キーワード</label>
+    <%= f.text_field :keyword, value: keyword, class: "form-control form-control-sm", placeholder: "タイトル・本文" %>
+  </div>
+
+  <!-- タグ検索 -->
+  <div class="mb-3">
+    <label class="form-label">タグ</label>
+    <% if tags.present? %>
+      <%= f.select :tag_ids,
+                  tags.map{ |tag| [tag.name, tag.id] },
+                  { include_blank: "選択してください", selected: selected_tag_ids },
+                  { class: "form-select form-select-sm" } %>
+    <% end %>
+  </div>
+
+  <!-- ユーザー検索 -->
+  <div class="mb-3">
+    <label class="form-label">投稿者</label>
+    <%= f.select :user_id,
+                users.map{ |user| [user.name, user.id] },
+                { include_blank: "選択してください", selected: selected_user_id },
+                { class: "form-select form-select-sm" } %>
+  </div>
+
+  <!-- 期間検索 -->
+  <div class="mb-3">
+    <label class="form-label">期間</label>
+    <div class="input-group input-group-sm mb-2">
+      <%= f.date_field :start_date, value: start_date, class: "form-control form-control-sm" %>
+      <span class="input-group-text">〜</span>
+      <%= f.date_field :end_date, value: end_date, class: "form-control form-control-sm" %>
+    </div>
+  </div>
+
+  <!-- クイック期間 -->
+  <div class="mb-3">
+    <label class="form-label">クイック期間</label>
+    <div class="d-flex flex-wrap gap-1">
+      <%= link_to "今日", admin_posts_path(keyword: keyword, tag_ids: selected_tag_ids, user_id: selected_user_id, start_date: Date.today, end_date: Date.today), class: "btn btn-outline-secondary btn-sm" %>
+      <%= link_to "今週", admin_posts_path(keyword: keyword, tag_ids: selected_tag_ids, user_id: selected_user_id, start_date: Date.today.beginning_of_week, end_date: Date.today), class: "btn btn-outline-secondary btn-sm" %>
+      <%= link_to "今月", admin_posts_path(keyword: keyword, tag_ids: selected_tag_ids, user_id: selected_user_id, start_date: Date.today.beginning_of_month, end_date: Date.today), class: "btn btn-outline-secondary btn-sm" %>
+    </div>
+  </div>
+
+  <!-- 検索ボタン -->
+  <div class="d-grid gap-2">
+    <%= f.submit "検索", class: "btn btn-primary btn-sm" %>
+    <%= link_to "リセット", admin_posts_path, class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+<% end %>
