@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-4">
           <%= f.select :phase,
-                     [["すべて", ""], ["基礎学習中", "basic_learning"], ["個人開発中", "personal_dev"], ["就職活動中", "job_hunting"]],
+                     [["すべて", ""], ["基礎学習中", "basic_learning"], ["応用学習中", "advanced_learning"], ["個人開発中", "personal_dev"], ["就職活動中", "job_hunting"], ["就職済み", "employed"]],
                      { selected: params[:phase] },
                      { class: "form-select" } %>
         </div>

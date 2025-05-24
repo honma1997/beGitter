@@ -33,8 +33,10 @@
                 <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
                 <%= f.select :phase, [
                   ['基礎学習中', 'basic_learning'],
+                  ['応用学習中', 'advanced_learning'],
                   ['個人開発中', 'personal_dev'],
-                  ['就職活動中', 'job_hunting']
+                  ['就職活動中', 'job_hunting'],
+                  ['就職済み', 'employed']
                 ], {}, { class: "form-select" } %>
               </div>
               <div class="form-text">あなたの現在の学習段階を選択してください</div>

@@ -114,9 +114,9 @@ ja:
     user:
       phase:
         basic_learning: "基礎学習中"
+        advanced_learning: "応用学習中"
         personal_dev: "個人開発中"
         job_hunting: "就職活動中"
-        advanced_learning: "応用学習中"
         employed: "就職済み"
   time:
     formats:

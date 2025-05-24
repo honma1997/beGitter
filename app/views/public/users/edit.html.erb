@@ -44,7 +44,13 @@
 
             <div class="mb-3">
               <%= f.label :phase, "学習フェーズ", class: "form-label" %>
-              <%= f.select :phase, User.phases_i18n.invert, {}, { class: "form-select", disabled: current_user.guest? } %>
+              <%= f.select :phase, [
+                ['基礎学習中', 'basic_learning'],
+                ['応用学習中', 'advanced_learning'],
+                ['個人開発中', 'personal_dev'],
+                ['就職活動中', 'job_hunting'],
+                ['就職済み', 'employed']
+              ], {}, { class: "form-select", disabled: current_user.guest? } %>
               <% if current_user.guest? %>
                 <div class="form-text text-danger">ゲストユーザーは編集できません</div>
               <% else %>

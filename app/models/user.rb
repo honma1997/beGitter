@@ -39,7 +39,7 @@ class User < ApplicationRecord
   #=========================================================
   
   # 学習フェーズの定義（数値で保存されるが、シンボルで扱える）
-  # 0: 基礎学習中, 1: 個人開発中, 2: 就職活動中
+  # 0: 基礎学習中, 1: 応用学習中, 2: 個人開発中, 3: 就職活動中, 4: 就職済み
   enum phase: { basic_learning: 0, advanced_learning: 1, personal_dev: 2, job_hunting: 3, employed: 4 }
   
   #=========================================================
@@ -50,8 +50,10 @@ class User < ApplicationRecord
   def phase_in_japanese
     case phase
     when 'basic_learning' then '基礎学習中'
+    when 'advanced_learning' then '応用学習中'
     when 'personal_dev' then '個人開発中'
     when 'job_hunting' then '就職活動中'
+    when 'employed' then '就職済み'
     else '未設定'
     end
   end
