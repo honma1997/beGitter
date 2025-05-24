@@ -7,7 +7,7 @@
         <span class="badge bg-primary fs-6"><%= @posts.total_count %>件</span>
       </div>
 
-      <%# 検索結果情報の表示 %>
+      <!-- 検索結果情報の表示 -->
       <% if @keyword.present? || @selected_tag_ids.present? || @selected_user_id.present? || @start_date.present? || @end_date.present? %>
         <div class="search-result-info alert alert-info mb-3">
           <div class="d-flex justify-content-between align-items-start">
@@ -50,15 +50,15 @@
         </div>
       <% end %>
 
-      <%# 投稿一覧表示部分 %>
+      <!-- 投稿一覧表示部分 -->
       <div class="posts-container">
         <% if @posts.present? %>
-          <%# 投稿がある場合、カード形式で表示 %>
+          <!-- 投稿がある場合、カード形式で表示 -->
           <% @posts.each do |post| %>
             <div class="card mb-3">
               <div class="card-body">
                 <div class="row">
-                  <%# 投稿画像があれば左側に表示（小さめのサムネイル） %>
+                  <!-- 投稿画像があれば左側に表示（小さめのサムネイル） -->
                   <% if post.image.attached? %>
                     <div class="col-md-2 mb-3 mb-md-0">
                       <%= image_tag post.image, class: "img-fluid rounded", style: "width: 100%; height: 80px; object-fit: cover;" %>
@@ -67,7 +67,7 @@
                   <% else %>
                     <div class="col-12">
                   <% end %>
-                    <%# 投稿タイトル・ID・投稿者情報 %>
+                    <!-- 投稿タイトル・ID・投稿者情報 -->
                     <div class="d-flex justify-content-between align-items-center mb-2">
                       <h5 class="card-title mb-0">
                         <%= link_to post.title, admin_post_path(post), class: "text-decoration-none" %>
@@ -78,20 +78,20 @@
                       </span>
                     </div>
 
-                    <%# 投稿者情報 %>
+                    <!-- 投稿者情報 -->
                     <div class="mb-2">
                       投稿者: <%= link_to post.user.name, admin_user_path(post.user), class: "text-decoration-none" %>
                       <span class="badge bg-info text-white ms-1"><%= post.user.phase_in_japanese %></span>
                     </div>
 
-                    <%# 投稿本文（100文字で切り詰め） %>
+                    <!-- 投稿本文（100文字で切り詰め） -->
                     <div class="card-text mb-2 post-content">
-                      <%# 本文の先頭100文字を表示 %>
+                      <!-- 本文の先頭100文字を表示 -->
                       <% content = strip_tags(post.body).truncate(100, separator: ' ', omission: '...') %>
                       <p class="mb-0 text-secondary"><%= content %></p>
                     </div>
 
-                    <%# タグ情報とアクション %>
+                    <!-- タグ情報とアクション -->
                     <div class="d-flex justify-content-between align-items-center mt-2">
                       <div class="post-tags">
                         <% post.tags.each do |tag| %>
@@ -109,10 +109,10 @@
                       </div>
                     </div>
 
-                    <%# 投稿統計情報 %>
+                    <!-- 投稿統計情報 - N+1問題解決のためsizeを使用 -->
                     <div class="mt-2 text-muted small">
-                      <i class="far fa-heart me-1"></i><%= post.likes.count %> いいね
-                      <i class="far fa-comment me-1 ms-2"></i><%= post.comments.count %> コメント
+                      <i class="far fa-heart me-1"></i><%= post.likes.size %> いいね
+                      <i class="far fa-comment me-1 ms-2"></i><%= post.comments.size %> コメント
                     </div>
                   </div>
                 </div>
@@ -120,7 +120,7 @@
             </div>
           <% end %>
 
-            <%# ページネーションの表示 %>
+            <!-- ページネーションの表示 -->
             <div class="pagination-container">
               <div class="pagination-info">
                 <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>

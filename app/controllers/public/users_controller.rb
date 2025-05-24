@@ -6,19 +6,22 @@ class Public::UsersController < ApplicationController
 
   # ユーザー一覧
   def index
-    @users = User.page(params[:page]).per(12)
+    # N+1問題解決: preloadでpostsとfollowersを一括取得
+    @users = User.preload(:posts, :followers).page(params[:page]).per(12)
   end
 
   # ユーザー詳細
   def show
     @user = User.find(params[:id])
-    @posts = @user.posts.order(created_at: :desc).page(params[:page]).per(5)
+    # N+1問題解決: includesでuser、tagsを一括取得
+    @posts = @user.posts.includes(:tags, :likes, :comments).order(created_at: :desc).page(params[:page]).per(5)
   end
   
   # マイページ
   def mypage
     @user = current_user
-    @posts = @user.posts.order(created_at: :desc).page(params[:page]).per(5)
+    # N+1問題解決: includesでtags、likes、commentsを一括取得
+    @posts = @user.posts.includes(:tags, :likes, :comments).order(created_at: :desc).page(params[:page]).per(5)
   end
 
   # GitHub連携
@@ -61,13 +64,15 @@ class Public::UsersController < ApplicationController
 
   def followings
     @user = User.find(params[:id])
-    @users = @user.followings.page(params[:page]).per(12)
+    # N+1問題解決: preloadでpostsとfollowersを一括取得
+    @users = @user.followings.preload(:posts, :followers).page(params[:page]).per(12)
     render 'followings'
   end
   
   def followers
     @user = User.find(params[:id])
-    @users = @user.followers.page(params[:page]).per(12)
+    # N+1問題解決: preloadでpostsとfollowersを一括取得
+    @users = @user.followers.preload(:posts, :followers).page(params[:page]).per(12)
     render 'followers'
   end
 

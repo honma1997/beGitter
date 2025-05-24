@@ -9,7 +9,8 @@
             <div class="card-body text-center">
               <h5 class="card-title mb-3"><%= tag.name %></h5>
               <p class="card-text">
-                <span class="badge bg-secondary"><%= tag.posts.count %> 件の投稿</span>
+                <%# N+1問題解決のためsizeを使用 %>
+                <span class="badge bg-secondary"><%= tag.posts.size %> 件の投稿</span>
               </p>
               <%= link_to "投稿を見る", tag_path(tag), class: "btn btn-outline-primary btn-sm" %>
             </div>

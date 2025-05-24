@@ -26,6 +26,7 @@ class Public::LikesController < ApplicationController
   private
   
   def set_post
-    @post = Post.find(params[:post_id])
+    # N+1問題解決: includesでlikesを一括取得
+    @post = Post.includes(:likes).find(params[:post_id])
   end
 end

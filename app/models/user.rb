@@ -57,8 +57,9 @@ class User < ApplicationRecord
   end
   
   # 特定のユーザーをフォローしているかチェックするメソッド
+  # N+1問題対策: existsを使用してSQLクエリを最適化
   def following?(user)
-    followings.include?(user)
+    relationships.exists?(followed_id: user.id)
   end
   
   # 特定のユーザーをフォローするメソッド

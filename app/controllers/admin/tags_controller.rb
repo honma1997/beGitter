@@ -3,7 +3,8 @@ class Admin::TagsController < Admin::ApplicationController
   
   # タグ一覧
   def index
-    @tags = Tag.all.order(created_at: :desc).page(params[:page]).per(20)
+    # N+1問題解決: preloadでpostsを一括取得
+    @tags = Tag.preload(:posts).order(created_at: :desc).page(params[:page]).per(20)
     @tag = Tag.new  # 新規作成用
   end
 
@@ -14,7 +15,7 @@ class Admin::TagsController < Admin::ApplicationController
     if @tag.save
       redirect_to admin_tags_path, notice: "タグを作成しました"
     else
-      @tags = Tag.all.order(created_at: :desc).page(params[:page]).per(20)
+      @tags = Tag.preload(:posts).order(created_at: :desc).page(params[:page]).per(20)
       render :index
     end
   end
@@ -45,7 +46,8 @@ class Admin::TagsController < Admin::ApplicationController
   
   # タグを取得するメソッド
   def set_tag
-    @tag = Tag.find(params[:id])
+    # N+1問題解決: preloadでpostsを一括取得
+    @tag = Tag.preload(:posts).find(params[:id])
   end
   
   # ストロングパラメータ

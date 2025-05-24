@@ -6,7 +6,8 @@ class Public::PostsController < ApplicationController
   
   # 投稿一覧
   def index
-    @posts = Post.includes(:user, :tags).order(created_at: :desc).page(params[:page]).per(10)
+    # N+1問題解決: includes使用でuser、tagsを一括取得
+    @posts = Post.includes(:user, :tags, :likes, :comments).order(created_at: :desc).page(params[:page]).per(10)
     @tags = Tag.all # 検索フォーム用
     @users = User.all # ユーザー一覧を追加
     @selected_user_id = params[:user_id] # 選択されたユーザーIDを追加
@@ -21,6 +22,7 @@ class Public::PostsController < ApplicationController
     end
     
     @comment = Comment.new
+    # N+1問題解決: includesでuserを一括取得
     @comments = @post.comments.includes(:user).order(created_at: :desc)
   end
 
@@ -92,7 +94,8 @@ class Public::PostsController < ApplicationController
       @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : nil
       @end_date = params[:end_date].present? ? Date.parse(params[:end_date]) : nil
       
-      @posts = Post.includes(:user, :tags)
+      # N+1問題解決: includes使用でuser、tags、likes、commentsを一括取得
+      @posts = Post.includes(:user, :tags, :likes, :comments)
                   .search(@keyword, @selected_tag_ids, @selected_user_id, @start_date, @end_date)
                   .order(created_at: :desc)
                   .page(params[:page])
@@ -111,7 +114,8 @@ class Public::PostsController < ApplicationController
   
   # 投稿を取得するメソッド
   def set_post
-    @post = Post.find_by(id: params[:id])
+    # N+1問題解決: includesでuser、tags、likes、commentsを一括取得
+    @post = Post.includes(:user, :tags, :likes, comments: :user).find_by(id: params[:id])
     unless @post
       redirect_to posts_path, alert: "その投稿はすでに削除されています。"
     end

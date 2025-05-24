@@ -51,7 +51,8 @@
                 <tr>
                   <td><%= tag.id %></td>
                   <td><%= tag.name %></td>
-                  <td><%= tag.posts.count %></td>
+                  <!-- N+1問題解決のためsizeを使用 -->
+                  <td><%= tag.posts.size %></td>
                   <td><%= tag.created_at.strftime('%Y/%m/%d %H:%M') %></td>
                   <td>
                     <%= link_to edit_admin_tag_path(tag), class: "btn btn-sm btn-outline-primary" do %>
@@ -67,7 +68,7 @@
           </table>
         </div>
 
-          <%# ページネーションの表示 %>
+          <!-- ページネーションの表示 -->
           <div class="pagination-container">
             <div class="pagination-info">
               <%= "全#{@tags.total_count}件中 #{@tags.offset_value + 1}〜#{@tags.offset_value + @tags.length}件表示" %>

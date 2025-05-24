@@ -35,14 +35,14 @@
                 </p>
               <% end %>
 
-              <%# 投稿数・フォロワー数 %>
+              <%# 投稿数・フォロワー数 - N+1問題解決のためsizeを使用 %>
               <div class="d-flex justify-content-center gap-3 mb-3">
                 <div class="text-center">
-                  <div class="fw-bold"><%= user.posts.count %></div>
+                  <div class="fw-bold"><%= user.posts.size %></div>
                   <small class="text-muted">投稿</small>
                 </div>
                 <div class="text-center">
-                  <div class="fw-bold"><%= user.followers.count %></div>
+                  <div class="fw-bold"><%= user.followers.size %></div>
                   <small class="text-muted">フォロワー</small>
                 </div>
               </div>

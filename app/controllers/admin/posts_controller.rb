@@ -22,7 +22,8 @@ class Admin::PostsController < Admin::ApplicationController
       @end_date = params[:end_date].present? ? Date.parse(params[:end_date]) : nil
       @selected_user_id = params[:user_id]
       
-      @posts = Post.includes(:user, :tags)
+      # N+1問題解決: includes使用でuser、tags、likes、commentsを一括取得
+      @posts = Post.includes(:user, :tags, :likes, :comments)
                   .search(@keyword, @selected_tag_ids, @selected_user_id, @start_date, @end_date)
                   .order(created_at: :desc)
                   .page(params[:page])
@@ -37,7 +38,8 @@ class Admin::PostsController < Admin::ApplicationController
 
   # 投稿詳細
   def show
-    @post = Post.includes(:user, :comments, :likes).find(params[:id])
+    # N+1問題解決: includes使用でuser、comments、likes、tagsを一括取得
+    @post = Post.includes(:user, :tags, :likes, comments: :user).find(params[:id])
   end
 
   # 投稿削除

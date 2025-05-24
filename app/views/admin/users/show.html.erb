@@ -1,167 +1,187 @@
-<%# ユーザー情報 %>
-      <div class="user-info">
-        <p><strong>ユーザー名:</strong> <%= @user.name %></p>
-        <p><strong>メールアドレス:</strong> <%= @user.email %></p>
-        <p><strong>学習フェーズ:</strong> <span class="badge bg-info text-white"><%= @user.phase_in_japanese %></span></p>
-        <p><strong>アカウント作成日:</strong> <%= @user.created_at.strftime('%Y/%m/%d %H:%M') %></p>
-        <p><strong>最終更新日:</strong> <%= @user.updated_at.strftime('%Y/%m/%d %H:%M') %></p>
+<div class="row">
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white">
+        <h4 class="mb-0">ユーザー情報</h4>
       </div>
+      <div class="card-body">
+        <!-- プロフィール画像 -->
+        <div class="text-center mb-4">
+          <% if @user.profile_image.attached? %>
+            <%= image_tag @user.profile_image, class: "rounded-circle img-thumbnail", style: "width: 150px; height: 150px; object-fit: cover;" %>
+          <% else %>
+            <div class="bg-light rounded-circle d-inline-flex justify-content-center align-items-center" style="width: 150px; height: 150px;">
+              <i class="fas fa-user fa-4x text-secondary"></i>
+            </div>
+          <% end %>
+        </div>
 
-      <%# ユーザー統計 %>
-      <hr>
-      <div class="user-stats row text-center">
-        <div class="col-4">
-          <h3><%= @user.posts.count %></h3>
-          <p class="text-muted">投稿</p>
+        <!-- ユーザー情報 -->
+        <div class="user-info">
+          <p><strong>ユーザー名:</strong> <%= @user.name %></p>
+          <p><strong>メールアドレス:</strong> <%= @user.email %></p>
+          <p><strong>学習フェーズ:</strong> <span class="badge bg-info text-white"><%= @user.phase_in_japanese %></span></p>
+          <p><strong>アカウント作成日:</strong> <%= @user.created_at.strftime('%Y/%m/%d %H:%M') %></p>
+          <p><strong>最終更新日:</strong> <%= @user.updated_at.strftime('%Y/%m/%d %H:%M') %></p>
         </div>
-        <div class="col-4">
-          <h3><%= @user.comments.count %></h3>
-          <p class="text-muted">コメント</p>
-        </div>
-        <div class="col-4">
-          <h3><%= @user.likes.count %></h3>
-          <p class="text-muted">いいね</p>
-        </div>
-      </div>
 
-      <hr>
-
-      <%# フォロー情報 %>
-      <div class="row mb-3">
-        <div class="col-6 text-center">
-          <h5><%= @user.followings.count %></h5>
-          <p class="text-muted">フォロー中</p>
+        <!-- ユーザー統計 -->
+        <hr>
+        <div class="user-stats row text-center">
+          <div class="col-4">
+            <h3><%= @user.posts.count %></h3>
+            <p class="text-muted">投稿</p>
+          </div>
+          <div class="col-4">
+            <h3><%= @user.comments.count %></h3>
+            <p class="text-muted">コメント</p>
+          </div>
+          <div class="col-4">
+            <h3><%= @user.likes.count %></h3>
+            <p class="text-muted">いいね</p>
+          </div>
         </div>
-        <div class="col-6 text-center">
-          <h5><%= @user.followers.count %></h5>
-          <p class="text-muted">フォロワー</p>
+
+        <hr>
+
+        <!-- フォロー情報 -->
+        <div class="row mb-3">
+          <div class="col-6 text-center">
+            <h5><%= @user.followings.count %></h5>
+            <p class="text-muted">フォロー中</p>
+          </div>
+          <div class="col-6 text-center">
+            <h5><%= @user.followers.count %></h5>
+            <p class="text-muted">フォロワー</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<%# ユーザーの投稿タブとコメントタブ %>
-<div class="col-md-8">
-  <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white">
-      <ul class="nav nav-tabs card-header-tabs" id="userContentTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="true">
-            投稿 (<%= @user.posts.count %>)
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="false">
-            コメント (<%= @user.comments.count %>)
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="likes-tab" data-bs-toggle="tab" data-bs-target="#likes" type="button" role="tab" aria-controls="likes" aria-selected="false">
-            いいね (<%= @user.likes.count %>)
-          </button>
-        </li>
-      </ul>
-    </div>
-    <div class="card-body">
-      <div class="tab-content" id="userTabContent">
-        <%# 投稿タブ %>
-        <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-          <% if @posts.present? %>
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>タイトル</th>
-                    <th>投稿日</th>
-                    <th>いいね</th>
-                    <th>コメント</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @posts.each do |post| %>
+  <!-- ユーザーの投稿タブとコメントタブ -->
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white">
+        <ul class="nav nav-tabs card-header-tabs" id="userContentTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="true">
+              投稿 (<%= @user.posts.count %>)
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab" aria-controls="comments" aria-selected="false">
+              コメント (<%= @user.comments.count %>)
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="likes-tab" data-bs-toggle="tab" data-bs-target="#likes" type="button" role="tab" aria-controls="likes" aria-selected="false">
+              いいね (<%= @user.likes.count %>)
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content" id="userTabContent">
+          <!-- 投稿タブ -->
+          <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+            <% if @posts.present? %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
                     <tr>
-                      <td>
-                        <%= link_to truncate(post.title, length: 30), admin_post_path(post), class: "text-decoration-none" %>
-                      </td>
-                      <td><%= post.created_at.strftime('%Y/%m/%d') %></td>
-                      <td><%= post.likes.count %></td>
-                      <td><%= post.comments.count %></td>
-                      <td>
-                        <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary" do %>
-                          <i class="fas fa-eye"></i>
-                        <% end %>
-                        <%= link_to admin_post_path(post), method: :delete, data: { confirm: "この投稿を削除しますか？", turbo: false }, class: "btn btn-sm btn-outline-danger" do %>
-                          <i class="fas fa-trash"></i>
-                        <% end %>
-                      </td>
+                      <th>タイトル</th>
+                      <th>投稿日</th>
+                      <th>いいね</th>
+                      <th>コメント</th>
+                      <th>操作</th>
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-              <%# ページネーションの表示 %>
-              <div class="pagination-container">
-                <div class="pagination-info">
-                  <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+                  </thead>
+                  <tbody>
+                    <% @posts.each do |post| %>
+                      <tr>
+                        <td>
+                          <%= link_to truncate(post.title, length: 30), admin_post_path(post), class: "text-decoration-none" %>
+                        </td>
+                        <td><%= post.created_at.strftime('%Y/%m/%d') %></td>
+                        <!-- N+1問題解決のためsizeを使用 -->
+                        <td><%= post.likes.size %></td>
+                        <td><%= post.comments.size %></td>
+                        <td>
+                          <%= link_to admin_post_path(post), class: "btn btn-sm btn-outline-primary" do %>
+                            <i class="fas fa-eye"></i>
+                          <% end %>
+                          <%= link_to admin_post_path(post), method: :delete, data: { confirm: "この投稿を削除しますか？", turbo: false }, class: "btn btn-sm btn-outline-danger" do %>
+                            <i class="fas fa-trash"></i>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+                <!-- ページネーションの表示 -->
+                <div class="pagination-container">
+                  <div class="pagination-info">
+                    <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <%= paginate @posts %>
+                  </div>
                 </div>
-                <div class="d-flex justify-content-center">
-                  <%= paginate @posts %>
-                </div>
+              <% else %>
+              <div class="alert alert-info">
+                <p class="mb-0">投稿がありません</p>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- コメントタブ -->
+          <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+            <% comments = @user.comments.includes(:post).order(created_at: :desc).limit(10) %>
+            <% if comments.present? %>
+              <div class="list-group">
+                <% comments.each do |comment| %>
+                  <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h6 class="mb-0">
+                        <%= link_to comment.post.title, admin_post_path(comment.post), class: "text-decoration-none" %>
+                      </h6>
+                      <small class="text-muted"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
+                    </div>
+                    <p class="mb-2"><%= comment.body %></p>
+                    <%= link_to "削除", "#", class: "btn btn-sm btn-outline-danger", data: { confirm: "このコメントを削除しますか？", turbo: false } %>
+                  </div>
+                <% end %>
               </div>
             <% else %>
-            <div class="alert alert-info">
-              <p class="mb-0">投稿がありません</p>
-            </div>
-          <% end %>
-        </div>
+              <div class="alert alert-info">
+                <p class="mb-0">コメントがありません</p>
+              </div>
+            <% end %>
+          </div>
 
-        <%# コメントタブ %>
-        <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-          <% comments = @user.comments.includes(:post).order(created_at: :desc).limit(10) %>
-          <% if comments.present? %>
-            <div class="list-group">
-              <% comments.each do |comment| %>
-                <div class="list-group-item">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0">
-                      <%= link_to comment.post.title, admin_post_path(comment.post), class: "text-decoration-none" %>
-                    </h6>
-                    <small class="text-muted"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
-                  </div>
-                  <p class="mb-2"><%= comment.body %></p>
-                  <%= link_to "削除", "#", class: "btn btn-sm btn-outline-danger", data: { confirm: "このコメントを削除しますか？", turbo: false } %>
-                </div>
-              <% end %>
-            </div>
-          <% else %>
-            <div class="alert alert-info">
-              <p class="mb-0">コメントがありません</p>
-            </div>
-          <% end %>
-        </div>
-
-        <%# いいねタブ %>
-        <div class="tab-pane fade" id="likes" role="tabpanel" aria-labelledby="likes-tab">
-          <% likes = @user.likes.includes(:post).order(created_at: :desc).limit(10) %>
-          <% if likes.present? %>
-            <div class="list-group">
-              <% likes.each do |like| %>
-                <%= link_to admin_post_path(like.post), class: "list-group-item list-group-item-action" do %>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="mb-1"><%= like.post.title %></h6>
-                    <small class="text-muted"><%= like.created_at.strftime('%Y/%m/%d') %></small>
-                  </div>
-                  <p class="mb-1">投稿者: <%= like.post.user.name %></p>
+          <!-- いいねタブ -->
+          <div class="tab-pane fade" id="likes" role="tabpanel" aria-labelledby="likes-tab">
+            <% likes = @user.likes.includes(:post).order(created_at: :desc).limit(10) %>
+            <% if likes.present? %>
+              <div class="list-group">
+                <% likes.each do |like| %>
+                  <%= link_to admin_post_path(like.post), class: "list-group-item list-group-item-action" do %>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h6 class="mb-1"><%= like.post.title %></h6>
+                      <small class="text-muted"><%= like.created_at.strftime('%Y/%m/%d') %></small>
+                    </div>
+                    <p class="mb-1">投稿者: <%= like.post.user.name %></p>
+                  <% end %>
                 <% end %>
-              <% end %>
-            </div>
-          <% else %>
-            <div class="alert alert-info">
-              <p class="mb-0">いいねした投稿がありません</p>
-            </div>
-          <% end %>
+              </div>
+            <% else %>
+              <div class="alert alert-info">
+                <p class="mb-0">いいねした投稿がありません</p>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

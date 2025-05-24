@@ -1,4 +1,4 @@
-<%# 管理者用 投稿詳細ページ %>
+<!-- 管理者用 投稿詳細ページ -->
 <div class="admin-post-show">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><%= @post.title %></h1>
@@ -13,26 +13,26 @@
   </div>
 
   <div class="row mb-4">
-    <%# 投稿情報 %>
+    <!-- 投稿情報 -->
     <div class="col-md-8">
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white">
           <h5 class="mb-0">投稿内容</h5>
         </div>
         <div class="card-body">
-          <%# 投稿画像（あれば表示） - ここを修正 %>
+          <!-- 投稿画像（あれば表示） -->
           <% if @post.image.attached? %>
             <div class="post-image mb-4 text-center">
               <%= image_tag @post.image, class: "img-fluid rounded", style: "max-width: 100%; max-height: 300px;" %>
             </div>
           <% end %>
 
-          <%# 投稿本文 %>
+          <!-- 投稿本文 -->
           <div class="markdown-content mb-4">
             <%= markdown(@post.body) %>
           </div>
 
-          <%# タグ一覧 %>
+          <!-- タグ一覧 -->
           <div class="post-tags mb-3">
             <h6>タグ</h6>
             <% if @post.tags.present? %>
@@ -48,7 +48,7 @@
             <% end %>
           </div>
 
-          <%# 投稿情報 %>
+          <!-- 投稿情報 -->
           <div class="post-meta">
             <div class="row">
               <div class="col-md-6">
@@ -56,19 +56,20 @@
                 <p class="mb-1"><strong>更新日時:</strong> <%= @post.updated_at.strftime('%Y/%m/%d %H:%M:%S') %></p>
               </div>
               <div class="col-md-6">
-                <p class="mb-1"><strong>いいね数:</strong> <%= @post.likes.count %></p>
-                <p class="mb-1"><strong>コメント数:</strong> <%= @post.comments.count %></p>
+                <!-- N+1問題解決のためsizeを使用 -->
+                <p class="mb-1"><strong>いいね数:</strong> <%= @post.likes.size %></p>
+                <p class="mb-1"><strong>コメント数:</strong> <%= @post.comments.size %></p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <%# コメント一覧 %>
+      <!-- コメント一覧 -->
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
           <h5 class="mb-0">コメント一覧</h5>
-          <span class="badge bg-secondary"><%= @post.comments.count %> 件</span>
+          <span class="badge bg-secondary"><%= @post.comments.size %> 件</span>
         </div>
         <div class="card-body p-0">
           <% if @post.comments.present? %>
@@ -102,7 +103,7 @@
       </div>
     </div>
 
-    <%# サイドバー：投稿者情報 %>
+    <!-- サイドバー：投稿者情報 -->
     <div class="col-md-4">
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white">
@@ -148,7 +149,7 @@
         </div>
       </div>
 
-      <%# 同一ユーザーの他の投稿 %>
+      <!-- 同一ユーザーの他の投稿 -->
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white">
           <h5 class="mb-0">同じユーザーの他の投稿</h5>

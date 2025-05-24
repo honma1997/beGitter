@@ -1,5 +1,6 @@
 // コメント一覧を更新
-document.getElementById("comments-list").innerHTML = '<%= j(render "public/comments/index", comments: @post.comments, post: @post) %>';
+// N+1問題解決: @postの関連データを事前読み込み済みのデータを使用
+document.getElementById("comments-list").innerHTML = '<%= j(render "public/comments/index", comments: @post.comments.includes(:user), post: @post) %>';
 
 // コメント入力フォームをリセット
 document.getElementById("comment_body").value = '';

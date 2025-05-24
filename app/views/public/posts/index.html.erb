@@ -126,8 +126,8 @@
                     <div class="d-flex justify-content-between align-items-center mt-2">
                       <div class="text-muted small">
                         <i class="far fa-calendar-alt me-1"></i><%= post.created_at.strftime('%Y/%m/%d %H:%M') %>
-                        <span class="ms-2"><i class="far fa-heart me-1"></i><%= post.likes.count %></span>
-                        <span class="ms-2"><i class="far fa-comment me-1"></i><%= post.comments.count %></span>
+                        <span class="ms-2"><i class="far fa-heart me-1"></i><%= post.likes.size %></span>
+                        <span class="ms-2"><i class="far fa-comment me-1"></i><%= post.comments.size %></span>
                       </div>
                       <%= link_to "詳細を見る", post_path(post), class: "btn btn-sm btn-outline-primary" %>
                     </div>

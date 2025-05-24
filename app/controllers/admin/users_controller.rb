@@ -14,13 +14,15 @@ class Admin::UsersController < Admin::ApplicationController
     end
   
     # ページネーション
-    @users = @users.order(created_at: :desc).page(params[:page]).per(20)
+    # N+1問題解決: preloadでpostsを一括取得
+    @users = @users.preload(:posts).order(created_at: :desc).page(params[:page]).per(20)
   end
 
   # ユーザー詳細
   def show
     @user = User.find(params[:id])
-    @posts = @user.posts.order(created_at: :desc).page(params[:page]).per(10)
+    # N+1問題解決: includesでtags、likes、commentsを一括取得
+    @posts = @user.posts.includes(:tags, :likes, :comments).order(created_at: :desc).page(params[:page]).per(10)
   end
 
   # ユーザー削除

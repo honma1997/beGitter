@@ -13,13 +13,22 @@ class Post < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
   
-  # いいね関連メソッド
+  # いいね関連メソッド - N+1問題対策版
   def liked_by?(user)
-    likes.exists?(user_id: user.id)
+    return false unless user
+    
+    # likesが既に読み込まれている場合はメモリ上で判定
+    if likes.loaded?
+      likes.any? { |like| like.user_id == user.id }
+    else
+      # まだ読み込まれていない場合はexistsクエリを使用
+      likes.exists?(user_id: user.id)
+    end
   end
   
   def self.search(keyword, tag_ids = nil, user_id = nil, start_date = nil, end_date = nil)
-    posts = all
+    # N+1問題解決: 基本的な関連付けを事前読み込み
+    posts = includes(:user, :tags, :likes, :comments)
     
     # キーワード検索
     if keyword.present?

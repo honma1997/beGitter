@@ -24,7 +24,8 @@
 
         <div class="mb-3">
           <h6>使用状況</h6>
-          <p>このタグは <%= @tag.posts.count %> 件の投稿で使用されています。</p>
+          <!-- N+1問題解決のためsizeを使用 -->
+          <p>このタグは <%= @tag.posts.size %> 件の投稿で使用されています。</p>
         </div>
 
         <div class="d-flex gap-2">

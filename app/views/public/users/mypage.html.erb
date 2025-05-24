@@ -43,6 +43,7 @@
             </div>
           </div>
 
+          <!-- GitHub設定 -->
           <% if !current_user.github_username.present? %>
             <% if !current_user.guest? %>
               <%= link_to edit_user_path(current_user), class: "btn btn-outline-dark w-100 mb-2" do %>
@@ -95,8 +96,10 @@
             <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
               <div class="d-flex justify-content-between mb-3">
                 <h4>投稿一覧</h4>
-                <%= link_to new_post_path, class: "btn btn-sm btn-primary" do %>
-                  <i class="fas fa-plus"></i> 新規投稿
+                <% unless current_user.guest? %>
+                  <%= link_to new_post_path, class: "btn btn-sm btn-primary" do %>
+                    <i class="fas fa-plus"></i> 新規投稿
+                  <% end %>
                 <% end %>
               </div>
 
@@ -110,28 +113,33 @@
                         <span class="ms-2"><i class="far fa-heart"></i> <%= post.likes.count %></span>
                         <span class="ms-2"><i class="far fa-comment"></i> <%= post.comments.count %></span>
                       </p>
-                      <div class="d-flex mt-2">
-                        <%= link_to edit_post_path(post), class: "btn btn-sm btn-outline-primary me-2" do %>
-                          <i class="fas fa-edit"></i> 編集
-                        <% end %>
-                        <%= button_to post_path(post), method: :delete,
-                            class: "btn btn-sm btn-outline-danger",
-                            data: { confirm: "本当に削除しますか？", turbo: false } do %>
-                          <i class="fas fa-trash"></i> 削除
-                        <% end %>
-                      </div>
+                      <% unless current_user.guest? %>
+                        <div class="d-flex mt-2">
+                          <%= link_to edit_post_path(post), class: "btn btn-sm btn-outline-primary me-2" do %>
+                            <i class="fas fa-edit"></i> 編集
+                          <% end %>
+                          <%= button_to post_path(post), method: :delete,
+                              class: "btn btn-sm btn-outline-danger",
+                              data: { confirm: "本当に削除しますか？", turbo: false } do %>
+                            <i class="fas fa-trash"></i> 削除
+                          <% end %>
+                        </div>
+                      <% end %>
                     </div>
                   </div>
                 <% end %>
-                <%# ページネーションの表示 %>
-                <div class="pagination-container">
-                  <div class="pagination-info">
-                    <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+                
+                <!-- ページネーション -->
+                <% if @posts.respond_to?(:total_count) %>
+                  <div class="pagination-container">
+                    <div class="pagination-info">
+                      <%= "全#{@posts.total_count}件中 #{@posts.offset_value + 1}〜#{@posts.offset_value + @posts.length}件表示" %>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <%= paginate @posts %>
+                    </div>
                   </div>
-                  <div class="d-flex justify-content-center">
-                    <%= paginate @posts %>
-                  </div>
-                </div>
+                <% end %>
               <% else %>
                 <div class="alert alert-info">
                   まだ投稿がありません。最初の投稿を作成しましょう！
@@ -144,7 +152,7 @@
               <h4 class="mb-3">いいねした投稿</h4>
 
               <% if @user.likes.present? %>
-                <% @user.likes.includes(:post).order(created_at: :desc).each do |like| %>
+                <% @user.likes.includes(post: :user).order(created_at: :desc).limit(10).each do |like| %>
                   <% post = like.post %>
                   <div class="card mb-3">
                     <div class="card-body">
@@ -152,12 +160,14 @@
                       <p class="card-text text-muted small">
                         <i class="far fa-user"></i> <%= post.user.name %>
                         <span class="ms-2"><i class="far fa-calendar"></i> <%= post.created_at.strftime('%Y/%m/%d %H:%M') %></span>
-
-                        <%# いいねボタン（既にいいね済みなので解除ボタンのみ） %>
+                      </p>
+                      
+                      <% unless current_user.guest? %>
+                        <!-- いいねボタン（既にいいね済みなので解除ボタンのみ） -->
                         <%= button_to post_like_path(post), method: :delete, class: "btn btn-sm btn-danger mt-2" do %>
                           <i class="fas fa-heart"></i> いいね解除
                         <% end %>
-                      </p>
+                      <% end %>
                     </div>
                   </div>
                 <% end %>
