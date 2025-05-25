@@ -85,8 +85,11 @@
                     </div>
                     <div class="d-flex align-items-center">
                       <small class="text-muted me-2"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
-                      <%= link_to "#", data: { confirm: "このコメントを削除しますか？", turbo: false }, class: "text-danger" do %>
-                        <i class="fas fa-trash-alt" title="削除"></i>
+                      <%= button_to admin_comment_path(comment), 
+                                    method: :delete, 
+                                    data: { confirm: "このコメントを削除しますか？", turbo: false }, 
+                                    class: "btn btn-sm btn-outline-danger" do %>
+                        <i class="fas fa-trash-alt"></i> 削除
                       <% end %>
                     </div>
                   </div>

@@ -136,31 +136,36 @@
             <% end %>
           </div>
 
-          <!-- コメントタブ -->
           <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-            <% comments = @user.comments.includes(:post).order(created_at: :desc).limit(10) %>
-            <% if comments.present? %>
-              <div class="list-group">
-                <% comments.each do |comment| %>
-                  <div class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <h6 class="mb-0">
-                        <%= link_to comment.post.title, admin_post_path(comment.post), class: "text-decoration-none" %>
-                      </h6>
-                      <small class="text-muted"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
-                    </div>
-                    <p class="mb-2"><%= comment.body %></p>
-                    <%= link_to "削除", "#", class: "btn btn-sm btn-outline-danger", data: { confirm: "このコメントを削除しますか？", turbo: false } %>
+          <% comments = @user.comments.includes(:post).order(created_at: :desc).limit(10) %>
+          <% if comments.present? %>
+            <div class="list-group">
+              <% comments.each do |comment| %>
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">
+                      <%= link_to comment.post.title, admin_post_path(comment.post), class: "text-decoration-none" %>
+                    </h6>
+                    <small class="text-muted"><%= comment.created_at.strftime('%Y/%m/%d %H:%M') %></small>
                   </div>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="alert alert-info">
-                <p class="mb-0">コメントがありません</p>
-              </div>
-            <% end %>
-          </div>
-
+                  <p class="mb-2"><%= comment.body %></p>
+                  <!-- 削除ボタンの修正 -->
+                  <%= button_to admin_comment_path(comment), 
+                                method: :delete, 
+                                data: { confirm: "このコメントを削除しますか？", turbo: false }, 
+                                class: "btn btn-sm btn-outline-danger" do %>
+                    <i class="fas fa-trash"></i> 削除
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="alert alert-info">
+              <p class="mb-0">コメントがありません</p>
+            </div>
+          <% end %>
+        </div>
+        
           <!-- いいねタブ -->
           <div class="tab-pane fade" id="likes" role="tabpanel" aria-labelledby="likes-tab">
             <% likes = @user.likes.includes(:post).order(created_at: :desc).limit(10) %>
