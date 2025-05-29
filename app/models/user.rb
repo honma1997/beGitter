@@ -55,6 +55,18 @@ class User < ApplicationRecord
     else '未設定'
     end
   end
+
+    # プロフィール画像のサムネイル（一覧表示用）
+    def profile_thumbnail
+      return unless profile_image.attached?
+      profile_image.variant(resize_to_fill: [100, 100]).processed
+    end
+    
+    # プロフィール画像の中サイズ（詳細表示用）
+    def profile_medium
+      return unless profile_image.attached?
+      profile_image.variant(resize_to_fill: [150, 150]).processed
+    end
   
   # 特定のユーザーをフォローしているかチェックするメソッド
   def following?(user)
@@ -89,4 +101,5 @@ class User < ApplicationRecord
   validates :github_username, length: { maximum: 39 }, allow_blank: true
   # GitHubユーザー名は英数字、ハイフンのみ許可
   validates :github_username, format: { with: /\A[a-zA-Z0-9-]+\z/, message: "は英数字とハイフンのみ使用できます" }, allow_blank: true
+
 end

@@ -13,14 +13,37 @@ class Post < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
   
-  # いいね関連メソッド
-  def liked_by?(user)
-    likes.exists?(user_id: user.id)
+  # 画像バリデーション（サイズ制限）
+  validate :image_size_validation
+  
+  # サムネイル用の画像（投稿一覧用）
+  def thumbnail
+    return unless image.attached?
+    image.variant(resize_to_fill: [300, 200]).processed
   end
   
-  # 検索メソッド
+  # 中サイズ画像（投稿詳細用）
+  def medium_image
+    return unless image.attached?
+    image.variant(resize_to_limit: [800, 600]).processed
+  end
+  
+  # いいね関連メソッド - N+1問題対策版
+  def liked_by?(user)
+    return false unless user
+    
+    # likesが既に読み込まれている場合はメモリ上で判定
+    if likes.loaded?
+      likes.any? { |like| like.user_id == user.id }
+    else
+      # まだ読み込まれていない場合はexistsクエリを使用
+      likes.exists?(user_id: user.id)
+    end
+  end
+  
   def self.search(keyword, tag_ids = nil, user_id = nil, start_date = nil, end_date = nil)
-    posts = all
+    # N+1問題解決: 基本的な関連付けを事前読み込み
+    posts = includes(:user, :tags, :likes, :comments)
     
     # キーワード検索
     if keyword.present?
@@ -44,13 +67,24 @@ class Post < ApplicationRecord
     
     # 期間での絞り込み
     if start_date.present?
-      posts = posts.where('created_at >= ?', start_date.beginning_of_day)
+      posts = posts.where('posts.created_at >= ?', start_date.beginning_of_day)
     end
     
     if end_date.present?
-      posts = posts.where('created_at <= ?', end_date.end_of_day)
+      posts = posts.where('posts.created_at <= ?', end_date.end_of_day)
     end
     
     posts
+  end
+  
+  private
+  
+  # 画像サイズのバリデーション
+  def image_size_validation
+    return unless image.attached?
+    
+    if image.blob.byte_size > 5.megabytes
+      errors.add(:image, 'は5MB以下にしてください')
+    end
   end
 end

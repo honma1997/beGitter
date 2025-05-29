@@ -68,9 +68,12 @@
     <%# 画像アップロードフィールド %>
     <div class="mb-4">
       <%= f.label :image, "画像（任意）", class: "form-label" %>
-      <%= f.file_field :image, class: "form-control", accept: "image/*" %>
-      <div class="form-text">PNG, JPG, GIF形式の画像をアップロードできます。</div>
+      <%= f.file_field :image, class: "form-control", accept: "image/*", id: "post_image" %>
+      <div class="form-text">PNG, JPG, GIF形式の画像をアップロードできます。（最大5MB）</div>
+      <div id="image-preview"></div>
     </div>
+
+    <%= javascript_pack_tag 'image_preview' %>
 
     <%# 送信ボタンとキャンセルボタン %>
     <div class="mb-3 d-flex gap-2">

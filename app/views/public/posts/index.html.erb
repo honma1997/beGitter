@@ -81,7 +81,7 @@
                   <%# 投稿画像があれば左側に表示（小さめのサムネイル） %>
                   <% if post.image.attached? %>
                     <div class="col-md-3 mb-3 mb-md-0">
-                      <%= image_tag post.image, class: "img-fluid rounded post-thumbnail", style: "width: 100%; height: 140px; object-fit: cover;" %>
+                      <%= image_tag post.thumbnail, class: "img-fluid rounded post-thumbnail", style: "width: 100%; height: 140px; object-fit: cover;" %>
                     </div>
                     <div class="col-md-9">
                   <% else %>

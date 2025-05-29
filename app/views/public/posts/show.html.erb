@@ -64,7 +64,7 @@
     <%# 投稿画像（存在する場合のみ表示） %>
     <% if @post.image.attached? %>
       <div class="post-image mb-4 text-center">
-        <%= image_tag @post.image, class: "img-fluid rounded post-image-display", style: "max-width: 600px; max-height: 400px; object-fit: contain;" %>
+        <%= image_tag @post.medium_image, class: "img-fluid rounded post-image-display", style: "max-width: 600px; max-height: 400px; object-fit: contain;" %>
       </div>
     <% end %>
 
